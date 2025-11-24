@@ -1,12 +1,18 @@
 # streamlit_app/utils/auth_utils.py
 import streamlit as st
 from pathlib import Path
-import json
-import bcrypt  # optional: install bcrypt for proper password hashing
 from typing import Optional
 from streamlit_app.utils.data_access import load_json, write_json
 
-USERS_PATH = Path(__file__).resolve().parents[2] / "backend" / "db" / "json_db" / "users.json"
+# bcrypt optional
+try:
+    import bcrypt
+    _HAS_BCRYPT = True
+except Exception:
+    _HAS_BCRYPT = False
+
+DB_ROOT = Path(__file__).resolve().parents[2] / "backend" / "db" / "json_db"
+USERS_PATH = DB_ROOT / "users.json"
 
 def ensure_session():
     if "auth" not in st.session_state:
@@ -22,19 +28,25 @@ def find_user_by_email(email: str) -> Optional[dict]:
             return u
     return None
 
+def hash_password(plain: str) -> str:
+    if _HAS_BCRYPT:
+        return bcrypt.hashpw(plain.encode(), bcrypt.gensalt()).decode()
+    return plain  # fallback (not secure)
+
 def verify_password(plain: str, hashed: str) -> bool:
-    try:
-        # bcrypt hashed password
-        return bcrypt.checkpw(plain.encode(), hashed.encode())
-    except Exception:
-        # fallback - simulation only (NOT SECURE)
-        return plain == hashed
+    if _HAS_BCRYPT:
+        try:
+            return bcrypt.checkpw(plain.encode(), hashed.encode())
+        except Exception:
+            return False
+    return plain == hashed
 
 def login(email: str, password: str) -> bool:
+    ensure_session()
     user = find_user_by_email(email)
     if not user:
         return False
-    if verify_password(password, user["password_hash"]):
+    if verify_password(password, user.get("password_hash","")):
         st.session_state.auth = {"logged_in": True, "user_id": user["id"]}
         return True
     return False
@@ -56,7 +68,7 @@ def get_current_user() -> Optional[dict]:
             return u
     return None
 
-# RBAC: define which pages require which roles (simplified)
+# RBAC mapping used by app.py
 PAGE_ROLE_MAP = {
     "Dashboard": ["Admin", "Company", "Company_Aggregator", "Auditor"],
     "Assessment (Level 1)": ["Company"],
@@ -71,10 +83,6 @@ PAGE_ROLE_MAP = {
 }
 
 def require_roles_for_page(page_name: str, user: Optional[dict]) -> bool:
-    """
-    Return True if page is public (Login) or user has one of required roles.
-    If page not in map, default to allow.
-    """
     if page_name == "Login":
         return True
     required = PAGE_ROLE_MAP.get(page_name)
@@ -84,3 +92,15 @@ def require_roles_for_page(page_name: str, user: Optional[dict]) -> bool:
         return False
     user_roles = user.get("roles", [])
     return any(r in user_roles for r in required)
+
+# helper for admin user creation (used by admin page)
+def create_user(user_obj: dict) -> dict:
+    # user_obj: {id,email,password_hash,roles,company_id,created_at}
+    db = load_json(USERS_PATH)
+    users = db.get("users", [])
+    if find_user_by_email(user_obj["email"]):
+        raise ValueError("Email already exists")
+    users.append(user_obj)
+    db["users"] = users
+    write_json(USERS_PATH, db)
+    return user_obj

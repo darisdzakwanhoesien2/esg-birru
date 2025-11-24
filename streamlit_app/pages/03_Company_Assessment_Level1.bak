@@ -2,8 +2,8 @@
 import streamlit as st
 from datetime import datetime
 from pathlib import Path
-from streamlit_app.utils.auth_utils import get_current_user, is_logged_in
-from streamlit_app.utils.data_access import load_json, write_json
+from utils.auth_utils import get_current_user, is_logged_in
+from utils.data_access import load_json, write_json
 
 DB_ROOT = Path(__file__).resolve().parents[2] / "backend" / "db" / "json_db"
 ASSESS_PATH = DB_ROOT / "assessments_level1.json"

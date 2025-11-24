@@ -1,0 +1,25 @@
+{
+  "industry_clusters": [
+    {
+      "industry": "Manufacturing",
+      "companies": [
+        "comp_001"
+      ],
+      "centroid_score": 0.95
+    },
+    {
+      "industry": "Food & Agriculture",
+      "companies": [
+        "comp_002"
+      ],
+      "centroid_score": 0.0
+    },
+    {
+      "industry": "Transportation",
+      "companies": [
+        "comp_003"
+      ],
+      "centroid_score": 0.3
+    }
+  ]
+}

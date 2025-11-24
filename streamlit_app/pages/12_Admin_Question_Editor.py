@@ -5,38 +5,33 @@ from streamlit_app.utils.auth_utils import is_logged_in, get_current_user
 from streamlit_app.utils.data_access import load_json, write_json
 
 DB_ROOT = Path(__file__).resolve().parents[2] / "backend" / "db" / "json_db"
-QUESTIONS_PATH = DB_ROOT / "questions.json"
+QUEST_PATH = DB_ROOT / "questions.json"
 
 def run(st=st):
-    st.header("Admin — Question Editor")
+    st.header("Question Editor (Admin)")
     if not is_logged_in():
-        st.warning("Login required.")
+        st.warning("Login required")
         return
     user = get_current_user()
     if "Admin" not in user.get("roles", []):
-        st.error("Admin role required.")
+        st.error("Admin required")
         return
-
-    db = load_json(QUESTIONS_PATH)
+    db = load_json(QUEST_PATH)
     questions = db.get("questions", [])
-    st.subheader("Existing Questions")
+    st.subheader("Existing")
     for q in questions:
-        st.write(f"- {q['id']}: {q.get('text')} ({q.get('type')})")
-
+        st.write(f"- {q['id']}: {q.get('text')}")
     st.markdown("---")
-    st.subheader("Add new question")
-    with st.form("q_form"):
+    with st.form("add_q"):
         qid = st.text_input("Question ID")
-        text = st.text_area("Question text")
+        text = st.text_area("Text")
         qtype = st.selectbox("Type", ["multiple_choice","essay"])
-        choices = st.text_input("Choices (comma separated, only for multiple_choice)")
-        submit = st.form_submit_button("Add question")
-        if submit:
+        choices = st.text_input("Choices (comma separated)")
+        if st.form_submit_button("Add"):
             new = {"id": qid, "text": text, "type": qtype}
-            if qtype == "multiple_choice":
+            if qtype=="multiple_choice":
                 new["choices"] = [c.strip() for c in choices.split(",") if c.strip()]
             questions.append(new)
-            db["questions"] = questions
-            write_json(QUESTIONS_PATH, db)
-            st.success("Question added")
+            write_json(QUEST_PATH, {"questions": questions})
+            st.success("Added")
             st.json(new)

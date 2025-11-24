@@ -1,55 +1,39 @@
 # streamlit_app/pages/13_Admin_User_Manager.py
 import streamlit as st
 from pathlib import Path
+from streamlit_app.utils.auth_utils import is_logged_in, get_current_user, create_user
 from streamlit_app.utils.data_access import load_json, write_json
-from streamlit_app.utils.auth_utils import get_users
-from streamlit_app.utils.auth_utils import find_user_by_email
-import bcrypt
-from streamlit_app.utils.auth_utils import is_logged_in, get_current_user
+from datetime import datetime
 
 DB_ROOT = Path(__file__).resolve().parents[2] / "backend" / "db" / "json_db"
 USERS_PATH = DB_ROOT / "users.json"
 
-def hash_password(pw: str) -> str:
-    try:
-        return bcrypt.hashpw(pw.encode(), bcrypt.gensalt()).decode()
-    except Exception:
-        # fallback (plain) - not secure
-        return pw
-
 def run(st=st):
-    st.header("Admin — User Manager")
+    st.header("User Manager")
     if not is_logged_in():
-        st.warning("Login required.")
+        st.warning("Login required")
         return
     user = get_current_user()
     if "Admin" not in user.get("roles", []):
-        st.error("Admin role required.")
+        st.error("Admin required")
         return
-
-    db = load_json(USERS_PATH)
-    users = db.get("users", [])
+    users = load_json(USERS_PATH).get("users", [])
     st.subheader("Existing users")
     for u in users:
-        st.write(f"- {u['id']} — {u['email']} — roles: {u.get('roles')}")
-
+        st.write(f"- {u['id']} — {u['email']} — {u.get('roles')}")
     st.markdown("---")
-    st.subheader("Create user")
     with st.form("create_user"):
         uid = st.text_input("User ID")
         email = st.text_input("Email")
         pw = st.text_input("Password")
         roles = st.text_input("Roles (comma separated)")
         cid = st.text_input("Company ID (optional)")
-        submit = st.form_submit_button("Create user")
-        if submit:
-            if find_user_by_email(email):
-                st.error("Email already exists")
-            else:
-                h = hash_password(pw)
-                obj = {"id": uid, "email": email, "password_hash": h, "roles": [r.strip() for r in roles.split(",") if r.strip()], "company_id": cid or None, "created_at": st.session_state.get("now","")}
-                users.append(obj)
-                db["users"] = users
-                write_json(USERS_PATH, db)
+        if st.form_submit_button("Create"):
+            hashed = pw  # auth_utils will accept plain or bcrypt as available
+            new = {"id": uid, "email": email, "password_hash": hashed, "roles":[r.strip() for r in roles.split(",") if r.strip()], "company_id": cid or None, "created_at": datetime.utcnow().isoformat()+"Z"}
+            try:
+                create_user(new)
                 st.success("User created")
-                st.json(obj)
+                st.json(new)
+            except Exception as e:
+                st.error(str(e))

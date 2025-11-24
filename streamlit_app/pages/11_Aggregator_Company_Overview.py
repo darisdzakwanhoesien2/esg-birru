@@ -7,18 +7,15 @@ from streamlit_app.utils.data_access import load_json
 DB_ROOT = Path(__file__).resolve().parents[2] / "backend" / "db" / "json_db"
 
 def run(st=st):
-    st.header("Aggregator — Company Overview")
+    st.header("Aggregator Overview")
     if not is_logged_in():
-        st.warning("Login required.")
+        st.warning("Login required")
         return
     user = get_current_user()
     if "Company_Aggregator" not in user.get("roles", []):
-        st.error("Only aggregator users may access this view.")
+        st.error("Aggregator role required")
         return
-
-    companies = load_json(DB_ROOT / "companies.json").get("companies", [])
-    st.write(f"Companies ({len(companies)}):")
-    for c in companies:
-        st.write("---")
+    comps = load_json(DB_ROOT / "companies.json").get("companies", [])
+    for c in comps:
         st.markdown(f"**{c['id']}** — {c['name']} ({c['industry']})")
         st.json(c.get("certification_status", {}))
