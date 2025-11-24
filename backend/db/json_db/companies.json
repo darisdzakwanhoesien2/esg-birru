@@ -1,44 +1,34 @@
 {
-  "users": [
+  "companies": [
     {
-      "id": "user_admin_01",
-      "email": "admin@certify.com",
-      "password_hash": "HASH_ADMIN",
-      "roles": ["Admin"],
-      "company_id": null,
-      "created_at": "2025-11-20T08:00:00Z"
+      "id": "comp_001",
+      "name": "ACME Manufacturing",
+      "industry": "Manufacturing",
+      "address": "ACME Road, Finland",
+      "certification_status": {
+        "level1": "completed",
+        "level2": "in_progress"
+      }
     },
     {
-      "id": "user_comp_01_mgr",
-      "email": "alice@acme.com",
-      "password_hash": "HASH_1",
-      "roles": ["Company"],
-      "company_id": "comp_001",
-      "created_at": "2025-11-20T08:30:00Z"
+      "id": "comp_002",
+      "name": "FreshFarm Foods",
+      "industry": "Food & Agriculture",
+      "address": "Market Street, Helsinki",
+      "certification_status": {
+        "level1": "not_started",
+        "level2": "not_started"
+      }
     },
     {
-      "id": "user_comp_01_aud",
-      "email": "audit@acme.com",
-      "password_hash": "HASH_2",
-      "roles": ["Company", "Auditor"],
-      "company_id": "comp_001",
-      "created_at": "2025-11-20T08:40:00Z"
-    },
-    {
-      "id": "user_aggregator_01",
-      "email": "group-lead@megagroup.com",
-      "password_hash": "HASH_3",
-      "roles": ["Company_Aggregator"],
-      "company_id": "group_mega",
-      "created_at": "2025-11-21T09:00:00Z"
-    },
-    {
-      "id": "user_comp_02_mgr",
-      "email": "ben@freshfarm.com",
-      "password_hash": "HASH_4",
-      "roles": ["Company"],
-      "company_id": "comp_002",
-      "created_at": "2025-11-21T10:00:00Z"
+      "id": "comp_003",
+      "name": "SkyTech Mobility",
+      "industry": "Transportation",
+      "address": "Industrial Road, Tampere",
+      "certification_status": {
+        "level1": "completed",
+        "level2": "completed"
+      }
     }
   ]
 }
