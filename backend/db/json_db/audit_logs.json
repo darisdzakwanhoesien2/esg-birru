@@ -1,0 +1,18 @@
+{
+  "audit_logs": [
+    {
+      "id": "log_001",
+      "user_id": "user_comp_01_aud",
+      "action": "approved_level2",
+      "target_id": "assess_acme_L2_001",
+      "timestamp": "2025-11-23T16:11:12Z"
+    },
+    {
+      "id": "log_002",
+      "user_id": "user_admin_01",
+      "action": "flagged_document",
+      "target_id": "assess_skytech_L2_001",
+      "timestamp": "2025-11-24T09:46:30Z"
+    }
+  ]
+}

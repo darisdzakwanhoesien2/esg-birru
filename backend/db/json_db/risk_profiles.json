@@ -1,0 +1,16 @@
+{
+  "risk_profiles": [
+    {
+      "company_id": "comp_001",
+      "risk_level": "low",
+      "score": 0.82,
+      "explanation": "Strong evidence, positive media trends."
+    },
+    {
+      "company_id": "comp_003",
+      "risk_level": "high",
+      "score": 0.28,
+      "explanation": "Negative media cluster and verified violation documents."
+    }
+  ]
+}

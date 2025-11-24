@@ -1,0 +1,44 @@
+{
+  "ocr_results": [
+    {
+      "ocr_id": "ocr_acme_001",
+      "doc_id": "doc_acme_001",
+      "extracted_text": "ACME ESG Policy version 2023...",
+      "named_entities": [
+        { "type": "ORG", "value": "ACME Manufacturing" },
+        { "type": "DATE", "value": "2023" }
+      ],
+      "confidence_score": 0.95
+    },
+    {
+      "ocr_id": "ocr_acme_002",
+      "doc_id": "doc_acme_002",
+      "extracted_text": "Carbon reduction target: 30% by 2030...",
+      "named_entities": [
+        { "type": "PERCENT", "value": "30%" },
+        { "type": "DATE", "value": "2030" }
+      ],
+      "confidence_score": 0.88
+    },
+    {
+      "ocr_id": "ocr_acme_003",
+      "doc_id": "doc_acme_supp_003",
+      "extracted_text": "ACME ESG audit report, validated by third-party...",
+      "named_entities": [
+        { "type": "ORG", "value": "ACME" },
+        { "type": "DATE", "value": "2024" }
+      ],
+      "confidence_score": 0.94
+    },
+    {
+      "ocr_id": "ocr_skytech_001",
+      "doc_id": "doc_skytech_incident_001",
+      "extracted_text": "Notice: SkyTech Mobility exceeded emission limits...",
+      "named_entities": [
+        { "type": "ORG", "value": "SkyTech Mobility" },
+        { "type": "EVENT", "value": "Emission Violation" }
+      ],
+      "confidence_score": 0.78
+    }
+  ]
+}

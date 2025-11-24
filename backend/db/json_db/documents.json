@@ -1,0 +1,40 @@
+{
+  "documents": [
+    {
+      "doc_id": "doc_acme_001",
+      "company_id": "comp_001",
+      "assessment_id": "assess_acme_L1_001",
+      "filename": "ESG_policy.pdf",
+      "file_path": "certify_app/storage/uploads/comp_001/ESG_policy.pdf",
+      "ocr_status": "processed",
+      "ocr_result_id": "ocr_acme_001"
+    },
+    {
+      "doc_id": "doc_acme_002",
+      "company_id": "comp_001",
+      "assessment_id": "assess_acme_L1_002",
+      "filename": "Carbon_Strategy_2030.pdf",
+      "file_path": "certify_app/storage/uploads/comp_001/Carbon_Strategy_2030.pdf",
+      "ocr_status": "processed",
+      "ocr_result_id": "ocr_acme_002"
+    },
+    {
+      "doc_id": "doc_acme_supp_003",
+      "company_id": "comp_001",
+      "assessment_id": "assess_acme_L2_001",
+      "filename": "ACME_ESG_Audit_2024.pdf",
+      "file_path": "/uploads/comp_001/ACME_ESG_Audit_2024.pdf",
+      "ocr_status": "processed",
+      "ocr_result_id": "ocr_acme_003"
+    },
+    {
+      "doc_id": "doc_skytech_incident_001",
+      "company_id": "comp_003",
+      "assessment_id": "assess_skytech_L2_001",
+      "filename": "SkyTech_Emission_Notice_2023.pdf",
+      "file_path": "/uploads/comp_003/SkyTech_Emission_Notice_2023.pdf",
+      "ocr_status": "processed",
+      "ocr_result_id": "ocr_skytech_001"
+    }
+  ]
+}

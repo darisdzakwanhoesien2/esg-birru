@@ -1,0 +1,22 @@
+{
+  "risk_timeseries": [
+    {
+      "company_id": "comp_001",
+      "timeline": [
+        { "date": "2025-01-01", "risk_score": 0.60 },
+        { "date": "2025-06-01", "risk_score": 0.72 },
+        { "date": "2025-10-01", "risk_score": 0.81 },
+        { "date": "2025-11-24", "risk_score": 0.82 }
+      ]
+    },
+    {
+      "company_id": "comp_003",
+      "timeline": [
+        { "date": "2025-01-01", "risk_score": 0.50 },
+        { "date": "2025-06-01", "risk_score": 0.40 },
+        { "date": "2025-10-01", "risk_score": 0.29 },
+        { "date": "2025-11-24", "risk_score": 0.28 }
+      ]
+    }
+  ]
+}

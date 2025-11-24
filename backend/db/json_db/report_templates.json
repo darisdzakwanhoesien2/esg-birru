@@ -1,0 +1,23 @@
+{
+  "report_templates": {
+    "level1": {
+      "sections": [
+        "Company Overview",
+        "Assessment Summary",
+        "Score Breakdown",
+        "LLM Explainability",
+        "Document Links"
+      ]
+    },
+    "level2": {
+      "sections": [
+        "Evidence Verification Summary",
+        "OCR + Media Analysis",
+        "Risk Graph Explanation",
+        "Auditor Comments",
+        "Final Score",
+        "Certification Recommendation"
+      ]
+    }
+  }
+}

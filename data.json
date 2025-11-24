@@ -1,0 +1,17 @@
+{
+  "data_paths": {
+    "root": "certify_app/backend/db/json_db/",
+    "users": "certify_app/backend/db/json_db/users.json",
+    "companies": "certify_app/backend/db/json_db/companies.json",
+    "assessments_level1": "certify_app/backend/db/json_db/assessments_level1.json",
+    "assessments_level2": "certify_app/backend/db/json_db/assessments_level2.json",
+    "documents": "certify_app/backend/db/json_db/documents.json",
+    "ocr_results": "certify_app/backend/db/json_db/ocr_results.json",
+    "media_checks": "certify_app/backend/db/json_db/media_checks.json",
+    "graph": "certify_app/backend/db/json_db/graph_store.json",
+    "industry_clusters": "certify_app/backend/db/json_db/clusters.json",
+    "risk_profiles": "certify_app/backend/db/json_db/risk_profiles.json",
+    "benchmarks": "certify_app/backend/db/json_db/industry_benchmarks.json",
+    "audit_trails": "certify_app/backend/db/json_db/audit_logs.json"
+  }
+}

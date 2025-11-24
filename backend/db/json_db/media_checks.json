@@ -1,0 +1,59 @@
+{
+  "media_checks": [
+    {
+      "media_id": "media_acme_001",
+      "company_id": "comp_001",
+      "platform": "news",
+      "source_url": "https://example.com/acme-safety-incident",
+      "content_text": "ACME faced a minor safety incident...",
+      "sentiment": -0.2,
+      "stance": "neutral",
+      "relevance_score": 0.65,
+      "verified_date": "2025-11-22T11:00:00Z"
+    },
+    {
+      "media_id": "media_acme_002",
+      "company_id": "comp_001",
+      "platform": "twitter",
+      "source_url": "https://twitter.com/post123",
+      "content_text": "ACME announces ambitious carbon targets!",
+      "sentiment": 0.8,
+      "stance": "positive",
+      "relevance_score": 0.72,
+      "verified_date": "2025-11-23T10:00:00Z"
+    },
+    {
+      "media_id": "media_skytech_001",
+      "company_id": "comp_003",
+      "platform": "news",
+      "source_url": "https://example.com/skytech-emission-violation",
+      "content_text": "SkyTech Mobility fined for emission violations.",
+      "sentiment": -0.75,
+      "stance": "negative",
+      "relevance_score": 0.88,
+      "verified_date": "2025-11-21T15:00:00Z"
+    },
+    {
+      "media_id": "media_acme_003",
+      "company_id": "comp_001",
+      "platform": "news",
+      "source_url": "https://news.com/acme-award",
+      "content_text": "ACME wins sustainability award.",
+      "sentiment": 0.9,
+      "stance": "positive",
+      "relevance_score": 0.88,
+      "verified_date": "2025-11-22T17:30:00Z"
+    },
+    {
+      "media_id": "media_skytech_002",
+      "company_id": "comp_003",
+      "platform": "twitter",
+      "source_url": "https://twitter.com/skytech_scandal",
+      "content_text": "New details emerge about SkyTech emission falsification.",
+      "sentiment": -0.9,
+      "stance": "negative",
+      "relevance_score": 0.91,
+      "verified_date": "2025-11-23T12:00:00Z"
+    }
+  ]
+}

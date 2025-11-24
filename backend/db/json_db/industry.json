@@ -1,0 +1,22 @@
+{
+  "industry_clusters": [
+    {
+      "industry": "Manufacturing",
+      "cluster_id": "mfg_cluster_high",
+      "companies": ["comp_001"],
+      "attributes": {
+        "avg_level1_score": 0.95,
+        "avg_media_sentiment": 0.30
+      }
+    },
+    {
+      "industry": "Transportation",
+      "cluster_id": "trans_cluster_risk",
+      "companies": ["comp_003"],
+      "attributes": {
+        "avg_level1_score": 0.30,
+        "avg_media_sentiment": -0.75
+      }
+    }
+  ]
+}

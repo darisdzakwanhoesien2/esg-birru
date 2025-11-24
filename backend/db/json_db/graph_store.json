@@ -1,0 +1,25 @@
+{
+  "graph": {
+    "nodes": [
+      { "id": "n_comp_001", "type": "Company", "name": "ACME Manufacturing" },
+      { "id": "n_doc_001", "type": "Document", "name": "ESG Policy" },
+      { "id": "n_doc_002", "type": "Document", "name": "Carbon Strategy" },
+      { "id": "n_comp_003", "type": "Company", "name": "SkyTech Mobility" },
+      { "id": "n_comp_001", "type": "Company", "name": "ACME Manufacturing" },
+      { "id": "n_doc_003", "type": "Document", "name": "ACME ESG Audit 2024" },
+      { "id": "n_risk_none", "type": "Risk", "name": "Low ESG Risk" },
+      { "id": "n_comp_003", "type": "Company", "name": "SkyTech Mobility" },
+      { "id": "n_doc_004", "type": "Document", "name": "SkyTech Emission Notice" },
+      { "id": "n_risk_high", "type": "Risk", "name": "High Emission Violation Risk" }
+    ],
+    "edges": [
+      { "source": "n_comp_001", "target": "n_doc_001", "relation": "HAS_DOCUMENT" },
+      { "source": "n_comp_001", "target": "n_doc_002", "relation": "HAS_DOCUMENT" },
+      { "source": "n_comp_003", "target": "MISSING_POLICY", "relation": "HAS_ISSUE" },
+      { "source": "n_comp_001", "target": "n_doc_003", "relation": "HAS_EVIDENCE" },
+      { "source": "n_doc_003", "target": "n_risk_none", "relation": "INDICATES_RISK" },
+      { "source": "n_comp_003", "target": "n_doc_004", "relation": "HAS_EVIDENCE" },
+      { "source": "n_doc_004", "target": "n_risk_high", "relation": "INDICATES_RISK" }
+    ]
+  }
+}

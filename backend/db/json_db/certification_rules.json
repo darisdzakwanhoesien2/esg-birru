@@ -1,0 +1,48 @@
+{
+  "scoring_rules": {
+    "level1": {
+      "weights": {
+        "policy_completeness": 0.35,
+        "transparency": 0.25,
+        "targets_clarity": 0.20,
+        "overall_compliance": 0.20
+      },
+      "passing_threshold": 0.60
+    },
+    "level2": {
+      "weights": {
+        "evidence_quality": 0.40,
+        "media_consistency": 0.30,
+        "audit_approval": 0.20,
+        "graph_risk_score": 0.10
+      },
+      "passing_threshold": 0.70
+    },
+    "final_certification": {
+      "rules": [
+        {
+          "conditions": {
+            "level1_min": 0.70,
+            "level2_min": 0.75,
+            "risk_level": "low"
+          },
+          "result": "Certified"
+        },
+        {
+          "conditions": {
+            "level1_min": 0.60,
+            "level2_min": 0.60,
+            "risk_level": "medium"
+          },
+          "result": "Certified with Conditions"
+        },
+        {
+          "conditions": {
+            "risk_level": "high"
+          },
+          "result": "Not Certified"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "assessments_level1": [
+    {
+      "assessment_id": "assess_acme_L1_001",
+      "company_id": "comp_001",
+      "level": 1,
+      "question_id": "Q01",
+      "question_text": "Does your company have an ESG policy?",
+      "question_type": "multiple_choice",
+      "answer": ["Yes"],
+      "score": 1.0,
+      "submitted_at": "2025-11-21T13:30:00Z",
+      "linked_documents": ["doc_acme_001"],
+      "explainability": {
+        "llm_reasoning": "Company claims to have an ESG policy in place.",
+        "graph_relations": ["comp_001 -> ESG_Policy_Doc"]
+      }
+    },
+    {
+      "assessment_id": "assess_acme_L1_002",
+      "company_id": "comp_001",
+      "level": 1,
+      "question_id": "Q02",
+      "question_type": "essay",
+      "answer": "We aim to reduce carbon emissions by 30% by 2030.",
+      "score": 0.9,
+      "submitted_at": "2025-11-21T13:45:00Z",
+      "linked_documents": ["doc_acme_002"],
+      "explainability": {
+        "llm_reasoning": "Target matches industry expectations.",
+        "graph_relations": ["comp_001 -> Carbon_Strategy_Doc"]
+      }
+    },
+    {
+      "assessment_id": "assess_skytech_L1_001",
+      "company_id": "comp_003",
+      "level": 1,
+      "question_id": "Q01",
+      "answer": ["No"],
+      "score": 0.3,
+      "submitted_at": "2025-11-22T10:20:00Z",
+      "linked_documents": [],
+      "explainability": {
+        "llm_reasoning": "No documented ESG framework.",
+        "graph_relations": ["comp_003 -> MISSING_POLICY"]
+      }
+    }
+  ]
+}

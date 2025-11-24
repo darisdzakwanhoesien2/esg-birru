@@ -1,0 +1,74 @@
+{
+  "level2_assessments": [
+    {
+      "assessment_id": "assess_acme_L2_001",
+      "company_id": "comp_001",
+      "level": 2,
+      "linked_level1": "assess_acme_L1_001",
+      "evidence_documents": ["doc_acme_001", "doc_acme_supp_003"],
+      "verification_steps": [
+        {
+          "step": "OCR Verification",
+          "status": "verified",
+          "confidence": 0.92,
+          "ocr_result_id": "ocr_acme_001"
+        },
+        {
+          "step": "Cross-media validation",
+          "status": "consistent",
+          "media_ids": ["media_acme_002"]
+        },
+        {
+          "step": "Human Auditor Check",
+          "status": "approved",
+          "auditor_id": "user_comp_01_aud",
+          "comments": "Document is authentic and up to date."
+        }
+      ],
+      "final_score": 0.88,
+      "explainability": {
+        "llm_summary": "Evidence confirms existence of formal ESG policy and supporting documentation.",
+        "graph_paths": [
+          "comp_001 -> ESG_Policy_Doc -> Verified_By_OCR",
+          "comp_001 -> Media_Positive_Event"
+        ]
+      },
+      "completed_at": "2025-11-23T16:10:00Z"
+    },
+    {
+      "assessment_id": "assess_skytech_L2_001",
+      "company_id": "comp_003",
+      "level": 2,
+      "linked_level1": "assess_skytech_L1_001",
+      "evidence_documents": ["doc_skytech_incident_001"],
+      "verification_steps": [
+        {
+          "step": "OCR Verification",
+          "status": "verified",
+          "confidence": 0.78,
+          "ocr_result_id": "ocr_skytech_001"
+        },
+        {
+          "step": "Cross-media validation",
+          "status": "contradictory",
+          "media_ids": ["media_skytech_001"]
+        },
+        {
+          "step": "Human Auditor Check",
+          "status": "flagged",
+          "auditor_id": "user_admin_01",
+          "comments": "Incident document raises compliance concerns."
+        }
+      ],
+      "final_score": 0.42,
+      "explainability": {
+        "llm_summary": "Multiple negative news sources confirm emission violations.",
+        "graph_paths": [
+          "comp_003 -> Emission_Violation_Doc -> Risk_Event",
+          "comp_003 -> Negative_News_Cluster"
+        ]
+      },
+      "completed_at": "2025-11-24T09:45:00Z"
+    }
+  ]
+}

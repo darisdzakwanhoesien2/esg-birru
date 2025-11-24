@@ -1,0 +1,13 @@
+{
+  "certification_lifecycle": [
+    "NOT_STARTED",
+    "LEVEL1_IN_PROGRESS",
+    "LEVEL1_COMPLETED",
+    "LEVEL2_IN_PROGRESS",
+    "LEVEL2_PENDING_AUDIT",
+    "LEVEL2_COMPLETED",
+    "CERTIFIED",
+    "CERTIFIED_WITH_CONDITIONS",
+    "NOT_CERTIFIED"
+  ]
+}

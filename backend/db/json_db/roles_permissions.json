@@ -1,0 +1,34 @@
+{
+  "roles": {
+    "Admin": {
+      "permissions": [
+        "manage_users",
+        "edit_questions",
+        "view_all_reports",
+        "override_scores",
+        "access_audit_logs"
+      ]
+    },
+    "Company": {
+      "permissions": [
+        "submit_assessment",
+        "upload_documents",
+        "view_own_reports"
+      ]
+    },
+    "Company_Aggregator": {
+      "permissions": [
+        "view_group_company_status",
+        "download_company_reports"
+      ]
+    },
+    "Auditor": {
+      "permissions": [
+        "verify_documents",
+        "run_level2_checks",
+        "approve_or_flag_evidence",
+        "add_audit_comments"
+      ]
+    }
+  }
+}
