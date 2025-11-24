@@ -7,7 +7,7 @@ from datetime import datetime
 import pytesseract  # optional; placeholder, may not be installed
 from PIL import Image
 
-DB_ROOT = Path(os.getcwd()) / "backend" / "db" / "json_db"
+DB_ROOT = Path(__file__).resolve().parents[2] / "backend" / "db" / "json_db"
 DOCS_PATH = DB_ROOT / "documents.json"
 OCR_PATH = DB_ROOT / "ocr_results.json"
 

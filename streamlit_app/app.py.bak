@@ -9,7 +9,6 @@ This file handles:
 
 import streamlit as st
 from importlib import import_module
-import os  # Add this import
 from pathlib import Path
 from streamlit_app.utils.auth_utils import (
     ensure_session,
@@ -38,7 +37,7 @@ PAGES = {
     "API Diagnostics": "streamlit_app.pages.15_API_Diagnostics",
 }
 
-DATA_PATH = Path(os.getcwd()) / "backend" / "db" / "json_db"
+DATA_PATH = Path(__file__).resolve().parents[2] / "backend" / "db" / "json_db"
 
 def import_and_run(module_path, st=st):
     try:

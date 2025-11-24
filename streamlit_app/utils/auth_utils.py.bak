@@ -11,7 +11,7 @@ try:
 except Exception:
     _HAS_BCRYPT = False
 
-DB_ROOT = Path(os.getcwd()) / "backend" / "db" / "json_db"
+DB_ROOT = Path(__file__).resolve().parents[2] / "backend" / "db" / "json_db"
 USERS_PATH = DB_ROOT / "users.json"
 
 def ensure_session():

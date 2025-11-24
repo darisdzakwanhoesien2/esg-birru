@@ -6,7 +6,7 @@ from streamlit_app.utils.data_access import load_json, write_json
 import networkx as nx
 import matplotlib.pyplot as plt
 
-DB_ROOT = Path(os.getcwd()) / "backend" / "db" / "json_db"
+DB_ROOT = Path(__file__).resolve().parents[2] / "backend" / "db" / "json_db"
 GRAPH_PATH = DB_ROOT / "graph_store.json"
 
 def run(st=st):

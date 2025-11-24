@@ -5,7 +5,7 @@ from streamlit_app.utils.auth_utils import is_logged_in, get_current_user, creat
 from streamlit_app.utils.data_access import load_json, write_json
 from datetime import datetime
 
-DB_ROOT = Path(os.getcwd()) / "backend" / "db" / "json_db"
+DB_ROOT = Path(__file__).resolve().parents[2] / "backend" / "db" / "json_db"
 USERS_PATH = DB_ROOT / "users.json"
 
 def run(st=st):

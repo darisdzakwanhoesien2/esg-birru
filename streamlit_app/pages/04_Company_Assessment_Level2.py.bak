@@ -5,7 +5,7 @@ from datetime import datetime
 from streamlit_app.utils.auth_utils import is_logged_in, get_current_user
 from streamlit_app.utils.data_access import load_json, write_json
 
-DB_ROOT = Path(os.getcwd()) / "backend" / "db" / "json_db"
+DB_ROOT = Path(__file__).resolve().parents[2] / "backend" / "db" / "json_db"
 DOCS_PATH = DB_ROOT / "documents.json"
 L2_PATH = DB_ROOT / "assessments_level2.json"
 OCR_PATH = DB_ROOT / "ocr_results.json"
@@ -30,7 +30,7 @@ def run(st=st):
                 if not uploaded:
                     st.error("Choose file first")
                 else:
-                    company_dir = Path(os.getcwd()).parent / "storage" / "uploads" / user["company_id"]
+                    company_dir = Path(__file__).resolve().parents[2].parent / "storage" / "uploads" / user["company_id"]
                     company_dir.mkdir(parents=True, exist_ok=True)
                     fname = f"{int(datetime.utcnow().timestamp())}_{uploaded.name}"
                     dest = company_dir / fname

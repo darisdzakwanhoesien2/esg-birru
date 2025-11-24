@@ -6,9 +6,9 @@ from streamlit_app.utils.auth_utils import get_current_user, is_logged_in
 from streamlit_app.utils.data_access import load_json, write_json
 import uuid
 
-DB_ROOT = Path(os.getcwd()) / "backend" / "db" / "json_db"
+DB_ROOT = Path(__file__).resolve().parents[2] / "backend" / "db" / "json_db"
 DOCS_PATH = DB_ROOT / "documents.json"
-STORAGE_ROOT = Path(os.getcwd()).parent / "storage" / "uploads"
+STORAGE_ROOT = Path(__file__).resolve().parents[2].parent / "storage" / "uploads"
 
 def run(st=st):
     st.header("Upload Evidence Document")
