@@ -125,6 +125,37 @@ def require_roles_for_page(page_name: str, user: Optional[dict]) -> bool:
         return False
     return any(r in user.get("roles", []) for r in required)
 
+# ============================================================
+# ADMIN: CREATE USER
+# ============================================================
+def create_user(user_obj: dict) -> dict:
+    """
+    Create a new user and persist to users.json.
+
+    user_obj example:
+    {
+        "id": "user_x",
+        "email": "x@example.com",
+        "password_hash": "HASH_X",
+        "roles": ["Admin"],
+        "company_id": "comp_001",
+        "created_at": "2025-12-29T12:00:00Z"
+    }
+    """
+    db = load_json(USERS_PATH)
+    users = db.get("users", [])
+
+    # Prevent duplicate emails
+    for u in users:
+        if u["email"].lower() == user_obj["email"].lower():
+            raise ValueError("Email already exists")
+
+    users.append(user_obj)
+    db["users"] = users
+    write_json(USERS_PATH, db)
+
+    return user_obj
+
 
 # # streamlit_app/utils/auth_utils.py
 
