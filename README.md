@@ -1,6 +1,10 @@
 Below is a **full, scalable, production-ready directory structure** for your Streamlit-based certification platform **with multi-role users, Level 1 & Level 2 assessments, OCR/media verification, graph-based reasoning, and clustering by industry**.
 I also include **complete JSON-based data structures** that can later be migrated to **PostgreSQL + Neo4j**.
 
+
+      "email": "admin@certify.com",
+      "password_hash": "HASH_ADMIN",
+      
 ---
 
 https://chatgpt.com/c/69246b65-4da8-832d-abeb-62001e2bd43b
@@ -373,3 +377,282 @@ Batch 4 can include:
 🔥 Migration-ready Neo4j graph schema
 🔥 API endpoint designs for each dataset
 🔥 Full example queries (Cypher, SQL, Streamlit functions)# esg-birru
+
+Yes — and this is a **very good move**. Turning this into a **research-based production system** means you need a **clear Research Question (RQ) → Method → Artifact → Evaluation** workflow that *directly maps* to your existing ESG product pipeline.
+
+Below is a **clean, thesis-ready Research Question Workflow**, aligned with **ABSA, explainability, neuro-symbolic ESG scoring, and SME constraints**.
+
+---
+
+## 1️⃣ Core Research Framing (Big Picture)
+
+### 🎯 Research Objective (High-level)
+
+> To design and evaluate an **explainable, evidence-aware ESG scoring system for SMEs** that balances **practical deployability** with **scientific rigor**, using **self-assessment, document verification, and external media intelligence**.
+
+This naturally decomposes into **modular research questions**, each corresponding to **your flowchart phases**.
+
+---
+
+## 2️⃣ Research Question Hierarchy (Mapped to Your System)
+
+### 🧠 RQ0 — Foundational (System-Level)
+
+**RQ0:**
+
+> *How can ESG assessment for SMEs be operationalized into a scalable, explainable, and verifiable AI system without requiring full ESG disclosures?*
+
+This justifies:
+
+* SMEs
+* Progressive tiers (Basic → Pro)
+* Hybrid AI (rules + NLP)
+
+---
+
+## 3️⃣ Phase-wise Research Question Workflow
+
+---
+
+## 🔹 Phase 1 — ESG Framework & Question Design (2.x)
+
+### **RQ1 — ESG Question Design**
+
+> **RQ1:** *What ESG questions and indicators best balance coverage, simplicity, and verifiability for SME self-assessment?*
+
+**Method**
+
+* Literature review (GRI, SASB, SME ESG studies)
+* Indicator reduction
+* Expert-informed question clustering
+
+**Artifact**
+
+* 30-question ESG schema
+* E/S/G-balanced indicator set
+
+**Evaluation**
+
+* Coverage vs redundancy analysis
+* Expert validation
+* Mapping completeness to ESG standards
+
+---
+
+### **RQ2 — Self-Declared ESG Reliability**
+
+> **RQ2:** *How reliable are self-declared ESG responses when no documentary evidence is available?*
+
+**Method**
+
+* Self-assessment scoring
+* Conservative weighting
+* Missing-data penalties
+
+**Artifact**
+
+* **Basic ESG Score**
+* Confidence labels (Low)
+
+**Evaluation**
+
+* Sensitivity analysis
+* False-positive risk estimation
+* Score stability under uncertainty
+
+---
+
+## 🔹 Phase 2 — Evidence & NLP Integration (3.x)
+
+![Image](https://obata.com/wp-content/uploads/2023/11/O_7_Steps_ESG-Process-1024x1024.png)
+
+![Image](https://www.mdpi.com/sustainability/sustainability-15-12731/article_deploy/html/images/sustainability-15-12731-g001.png)
+
+![Image](https://miro.medium.com/v2/resize%3Afit%3A1200/1%2A6Z0RV1aLsXVsYDlVRLJ1iA.png)
+
+---
+
+### **RQ3 — Evidence-Based Score Improvement**
+
+> **RQ3:** *To what extent does document-based verification improve ESG score accuracy and confidence compared to self-declared assessments?*
+
+**Method**
+
+* OCR + document parsing
+* Question–evidence matching
+* Confidence scoring
+
+**Artifact**
+
+* Evidence-backed ESG indicators
+* Per-question confidence scores
+
+**Evaluation**
+
+* Score delta (Basic vs Pro)
+* Evidence coverage ratio
+* Confidence gain metrics
+
+---
+
+### **RQ4 — Media & External Signal Validation**
+
+> **RQ4:** *Can external media signals detect inconsistencies or risks not captured by self-reported ESG data?*
+
+**Method**
+
+* News & social media crawling
+* ESG ABSA + sentiment classification
+* Contradiction detection
+
+**Artifact**
+
+* Media-derived risk flags
+* External sentiment indicators
+
+**Evaluation**
+
+* Contradiction detection accuracy
+* Risk recall vs false alarms
+* Temporal alignment analysis
+
+---
+
+### **RQ5 — Explainability in ESG NLP**
+
+> **RQ5:** *How can explainable NLP techniques increase transparency and trust in ESG scoring for non-technical SME stakeholders?*
+
+**Method**
+
+* Aspect-level explanations
+* Evidence traceability
+* Rule-based justifications
+
+**Artifact**
+
+* Per-question explanations
+* Highlighted text spans
+* Decision rationales
+
+**Evaluation**
+
+* Explainability usefulness survey
+* Human interpretability scoring
+* Error analysis with explanations
+
+---
+
+## 🔹 Phase 3 — Hybrid / Neuro-Symbolic Scoring (3.3.1)
+
+### **RQ6 — Neuro-Symbolic ESG Reasoning**
+
+> **RQ6:** *Does integrating symbolic rules with neural ESG classification improve robustness and auditability of ESG scores?*
+
+**Method**
+
+* Rule constraints (e.g., contradiction penalties)
+* Neural ESG classifiers
+* Logical consistency checks
+
+**Artifact**
+
+* Hybrid ESG score
+* Rule-trigger logs
+
+**Evaluation**
+
+* Logical consistency rate
+* Reduction of incoherent scores
+* Audit trace completeness
+
+---
+
+## 🔹 Phase 4 — User-Centric Explainability & UX (4.x)
+
+### **RQ7 — Decision Support & Recommendations**
+
+> **RQ7:** *Can explainable ESG feedback and actionable suggestions improve SME engagement and ESG readiness?*
+
+**Method**
+
+* Score-based suggestion generation
+* What-if analysis
+* UX explanation panels
+
+**Artifact**
+
+* Improvement suggestions
+* ESG roadmap
+
+**Evaluation**
+
+* User comprehension scores
+* Perceived usefulness
+* Engagement metrics
+
+---
+
+## 🔹 Phase 5 — Business & Financial Relevance (5.x)
+
+### **RQ8 — ESG-to-Risk Translation**
+
+> **RQ8:** *How effectively can ESG signals be translated into credit and risk indicators for SMEs?*
+
+**Method**
+
+* ESG → risk feature mapping
+* Penalization for governance/media risks
+
+**Artifact**
+
+* ESG-adjusted risk score
+* Credit-relevant features
+
+**Evaluation**
+
+* Correlation with known risk proxies
+* Feature importance analysis
+
+---
+
+## 4️⃣ Research Question → System Mapping (Summary Table)
+
+| Research Question | System Component      |
+| ----------------- | --------------------- |
+| RQ1               | ESG question design   |
+| RQ2               | Basic ESG score       |
+| RQ3               | Document verification |
+| RQ4               | Media intelligence    |
+| RQ5               | Explainability layer  |
+| RQ6               | Neuro-symbolic logic  |
+| RQ7               | Recommendation engine |
+| RQ8               | ESG → credit mapping  |
+
+---
+
+## 5️⃣ Thesis-Ready Contribution Statement
+
+You can safely claim **multiple contributions**:
+
+1. A **progressive ESG scoring framework** for SMEs
+2. A **question-centric, evidence-aware ESG pipeline**
+3. An **explainable ESG NLP architecture**
+4. A **neuro-symbolic ESG reasoning layer**
+5. A **production-ready research system**, not a toy model
+
+---
+
+## 6️⃣ What I Can Do Next (Highly Recommended)
+
+I can now:
+
+* Convert this into **thesis Chapter 3 (Methodology)**
+* Create a **Research Workflow Mermaid diagram**
+* Define **formal hypotheses (H1–H6)**
+* Design **evaluation datasets & metrics tables**
+* Write **academic-style RQ justifications**
+
+If this is for a thesis, the **next best step** is:
+👉 **Turn RQs into hypotheses + evaluation plan**
+
+Just say the word.
