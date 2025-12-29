@@ -1,21 +1,11 @@
-# streamlit_app/utils/auth_utils.py
-
-import os
 import streamlit as st
-from pathlib import Path
 from typing import Optional
+from datetime import datetime
 
 from streamlit_app.utils.data_access import load_json, write_json
+from streamlit_app.utils.paths import get_db_root
 
-# ============================================================
-# FORCE DEV MODE (NO BCRYPT, NO AUTO DETECTION)
-# ============================================================
-DEV_MODE = True   # ← THIS OVERRIDES EVERYTHING
-
-# ============================================================
-# PATHS
-# ============================================================
-DB_ROOT = Path(os.getcwd()) / "backend" / "db" / "json_db"
+DB_ROOT = get_db_root()
 USERS_PATH = DB_ROOT / "users.json"
 
 # ============================================================
@@ -23,17 +13,13 @@ USERS_PATH = DB_ROOT / "users.json"
 # ============================================================
 def ensure_session():
     if "auth" not in st.session_state:
-        st.session_state.auth = {
-            "logged_in": False,
-            "user_id": None,
-        }
+        st.session_state.auth = {"logged_in": False, "user_id": None}
 
 # ============================================================
 # USERS
 # ============================================================
 def get_users():
-    data = load_json(USERS_PATH)
-    return data.get("users", [])
+    return load_json(USERS_PATH).get("users", [])
 
 def find_user_by_email(email: str) -> Optional[dict]:
     for u in get_users():
@@ -41,56 +27,27 @@ def find_user_by_email(email: str) -> Optional[dict]:
             return u
     return None
 
-# ============================================================
-# PASSWORD CHECK (FORCED DEV)
-# ============================================================
 def verify_password(plain: str, stored: str) -> bool:
-    plain = plain.strip()
-    stored = stored.strip()
-    return plain == stored
+    return plain.strip() == stored.strip()
 
-# ============================================================
-# LOGIN
-# ============================================================
 def login(email: str, password: str) -> bool:
     ensure_session()
-
-    users = get_users()
-    st.session_state["_DEBUG_USERS"] = users  # ← visible proof
-
     user = find_user_by_email(email)
-
     if not user:
-        st.session_state["_DEBUG_REASON"] = "User not found"
         return False
-
-    ok = verify_password(password, user.get("password_hash", ""))
-
-    st.session_state["_DEBUG_PASSWORD_OK"] = ok
-    st.session_state["_DEBUG_EXPECTED"] = user.get("password_hash")
-    st.session_state["_DEBUG_INPUT"] = password
-
-    if ok:
-        st.session_state.auth = {
-            "logged_in": True,
-            "user_id": user["id"],
-        }
+    if verify_password(password, user.get("password_hash", "")):
+        st.session_state.auth = {"logged_in": True, "user_id": user["id"]}
         return True
-
     return False
 
-# ============================================================
-# STATE HELPERS
-# ============================================================
 def logout():
     st.session_state.auth = {"logged_in": False, "user_id": None}
 
 def is_logged_in() -> bool:
     ensure_session()
-    return st.session_state.auth.get("logged_in", False)
+    return st.session_state.auth["logged_in"]
 
 def get_current_user() -> Optional[dict]:
-    ensure_session()
     uid = st.session_state.auth.get("user_id")
     if not uid:
         return None
@@ -107,7 +64,7 @@ PAGE_ROLE_MAP = {
     "Assessment (Level 1)": ["Company"],
     "Assessment (Level 2)": ["Company", "Auditor"],
     "Upload Document": ["Company"],
-    "OCR Processor": ["Auditor", "Admin"],
+    "OCR Processor": ["Admin", "Auditor"],
     "Aggregator Overview": ["Company_Aggregator"],
     "Question Editor (Admin)": ["Admin"],
     "User Manager (Admin)": ["Admin"],
@@ -126,34 +83,16 @@ def require_roles_for_page(page_name: str, user: Optional[dict]) -> bool:
     return any(r in user.get("roles", []) for r in required)
 
 # ============================================================
-# ADMIN: CREATE USER
+# ADMIN CREATE USER
 # ============================================================
 def create_user(user_obj: dict) -> dict:
-    """
-    Create a new user and persist to users.json.
-
-    user_obj example:
-    {
-        "id": "user_x",
-        "email": "x@example.com",
-        "password_hash": "HASH_X",
-        "roles": ["Admin"],
-        "company_id": "comp_001",
-        "created_at": "2025-12-29T12:00:00Z"
-    }
-    """
     db = load_json(USERS_PATH)
     users = db.get("users", [])
-
-    # Prevent duplicate emails
-    for u in users:
-        if u["email"].lower() == user_obj["email"].lower():
-            raise ValueError("Email already exists")
-
+    if find_user_by_email(user_obj["email"]):
+        raise ValueError("Email already exists")
     users.append(user_obj)
     db["users"] = users
     write_json(USERS_PATH, db)
-
     return user_obj
 
 

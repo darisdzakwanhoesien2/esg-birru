@@ -2,19 +2,15 @@
 Hybrid router for Streamlit app (Option C).
 
 Responsibilities:
-- Bootstraps PYTHONPATH for Streamlit
+- PYTHONPATH bootstrap
 - Session initialization
 - Role-based navigation
 - Dynamic page routing
 """
 
 # ============================================================
-# 🔧 STREAMLIT BOOTSTRAP (REQUIRED)
+# 🔧 STREAMLIT BOOTSTRAP (ABSOLUTE IMPORTS FIX)
 # ============================================================
-# Streamlit does NOT add project root to sys.path by default.
-# This makes absolute imports like `streamlit_app.utils.*` work
-# both locally and on Streamlit Cloud.
-
 import sys
 from pathlib import Path
 
@@ -27,7 +23,6 @@ if str(PROJECT_ROOT) not in sys.path:
 # ============================================================
 import streamlit as st
 from importlib import import_module
-import os
 
 from streamlit_app.utils.auth_utils import (
     ensure_session,
@@ -38,11 +33,8 @@ from streamlit_app.utils.auth_utils import (
 )
 
 # ============================================================
-# CONFIG
+# PAGE REGISTRY
 # ============================================================
-DATA_PATH = Path(os.getcwd()) / "backend" / "db" / "json_db"
-
-# Human-readable name → module path
 PAGES = {
     "Login": "streamlit_app.pages.01_Login",
     "Dashboard": "streamlit_app.pages.02_Dashboard",
@@ -65,18 +57,17 @@ PAGES = {
 # PAGE LOADER
 # ============================================================
 def import_and_run(module_path: str):
-    """Dynamically import and run a page module"""
     try:
         module = import_module(module_path)
         if hasattr(module, "run"):
             module.run(st)
         else:
-            st.error(f"Module `{module_path}` has no run(st) function.")
+            st.error(f"{module_path} missing run(st)")
     except Exception as e:
         st.exception(e)
 
 # ============================================================
-# MAIN APP
+# MAIN
 # ============================================================
 def main():
     ensure_session()
@@ -88,10 +79,8 @@ def main():
 
     st.title("Certify — Compliance & Certification Platform")
 
-    # --------------------------------------------------------
-    # Sidebar: User Info
-    # --------------------------------------------------------
-    st.sidebar.markdown("### Account")
+    # Sidebar: account
+    st.sidebar.header("Account")
 
     if is_logged_in():
         user = get_current_user()
@@ -104,44 +93,174 @@ def main():
     else:
         st.sidebar.markdown("**Not logged in**")
 
-    # --------------------------------------------------------
-    # Sidebar: Navigation (RBAC filtered)
-    # --------------------------------------------------------
+    # Sidebar: navigation
     st.sidebar.markdown("---")
     st.sidebar.header("Navigation")
 
-    nav_items = []
     current_user = get_current_user()
+    nav_items = [
+        name for name in PAGES
+        if name == "Login" or require_roles_for_page(name, current_user)
+    ]
 
-    for page_name in PAGES.keys():
-        if page_name == "Login":
-            nav_items.append(page_name)
-        elif require_roles_for_page(page_name, current_user):
-            nav_items.append(page_name)
-
-    # Default selection
     default_index = 0 if not is_logged_in() else min(1, len(nav_items) - 1)
 
-    choice = st.sidebar.radio(
-        "Go to",
-        nav_items,
-        index=default_index,
-    )
+    choice = st.sidebar.radio("Go to", nav_items, index=default_index)
 
-    # --------------------------------------------------------
-    # Page Render
-    # --------------------------------------------------------
     module_path = PAGES.get(choice)
     if module_path:
         import_and_run(module_path)
     else:
-        st.error("Page not found.")
+        st.error("Page not found")
 
-# ============================================================
-# ENTRY POINT
-# ============================================================
 if __name__ == "__main__":
     main()
+
+
+# """
+# Hybrid router for Streamlit app (Option C).
+
+# Responsibilities:
+# - Bootstraps PYTHONPATH for Streamlit
+# - Session initialization
+# - Role-based navigation
+# - Dynamic page routing
+# """
+
+# # ============================================================
+# # 🔧 STREAMLIT BOOTSTRAP (REQUIRED)
+# # ============================================================
+# # Streamlit does NOT add project root to sys.path by default.
+# # This makes absolute imports like `streamlit_app.utils.*` work
+# # both locally and on Streamlit Cloud.
+
+# import sys
+# from pathlib import Path
+
+# PROJECT_ROOT = Path(__file__).resolve().parents[1]
+# if str(PROJECT_ROOT) not in sys.path:
+#     sys.path.insert(0, str(PROJECT_ROOT))
+
+# # ============================================================
+# # STANDARD IMPORTS
+# # ============================================================
+# import streamlit as st
+# from importlib import import_module
+# import os
+
+# from streamlit_app.utils.auth_utils import (
+#     ensure_session,
+#     is_logged_in,
+#     get_current_user,
+#     require_roles_for_page,
+#     logout,
+# )
+
+# # ============================================================
+# # CONFIG
+# # ============================================================
+# DATA_PATH = Path(os.getcwd()) / "backend" / "db" / "json_db"
+
+# # Human-readable name → module path
+# PAGES = {
+#     "Login": "streamlit_app.pages.01_Login",
+#     "Dashboard": "streamlit_app.pages.02_Dashboard",
+#     "Assessment (Level 1)": "streamlit_app.pages.03_Company_Assessment_Level1",
+#     "Assessment (Level 2)": "streamlit_app.pages.04_Company_Assessment_Level2",
+#     "Upload Document": "streamlit_app.pages.05_Document_Uploader",
+#     "OCR Processor": "streamlit_app.pages.06_OCR_Processor",
+#     "Media Checker": "streamlit_app.pages.07_Media_Checker",
+#     "Graph Explorer": "streamlit_app.pages.08_Graph_Explorer",
+#     "Reports (L1)": "streamlit_app.pages.09_Reports_Level1",
+#     "Reports (L2)": "streamlit_app.pages.10_Reports_Level2",
+#     "Aggregator Overview": "streamlit_app.pages.11_Aggregator_Company_Overview",
+#     "Question Editor (Admin)": "streamlit_app.pages.12_Admin_Question_Editor",
+#     "User Manager (Admin)": "streamlit_app.pages.13_Admin_User_Manager",
+#     "Industry Clustering": "streamlit_app.pages.14_Industry_Clustering",
+#     "API Diagnostics": "streamlit_app.pages.15_API_Diagnostics",
+# }
+
+# # ============================================================
+# # PAGE LOADER
+# # ============================================================
+# def import_and_run(module_path: str):
+#     """Dynamically import and run a page module"""
+#     try:
+#         module = import_module(module_path)
+#         if hasattr(module, "run"):
+#             module.run(st)
+#         else:
+#             st.error(f"Module `{module_path}` has no run(st) function.")
+#     except Exception as e:
+#         st.exception(e)
+
+# # ============================================================
+# # MAIN APP
+# # ============================================================
+# def main():
+#     ensure_session()
+
+#     st.set_page_config(
+#         page_title="Certify — ESG Rating Platform",
+#         layout="wide",
+#     )
+
+#     st.title("Certify — Compliance & Certification Platform")
+
+#     # --------------------------------------------------------
+#     # Sidebar: User Info
+#     # --------------------------------------------------------
+#     st.sidebar.markdown("### Account")
+
+#     if is_logged_in():
+#         user = get_current_user()
+#         st.sidebar.markdown(f"**User:** {user['email']}")
+#         st.sidebar.markdown(f"**Roles:** {', '.join(user['roles'])}")
+
+#         if st.sidebar.button("Logout"):
+#             logout()
+#             st.experimental_rerun()
+#     else:
+#         st.sidebar.markdown("**Not logged in**")
+
+#     # --------------------------------------------------------
+#     # Sidebar: Navigation (RBAC filtered)
+#     # --------------------------------------------------------
+#     st.sidebar.markdown("---")
+#     st.sidebar.header("Navigation")
+
+#     nav_items = []
+#     current_user = get_current_user()
+
+#     for page_name in PAGES.keys():
+#         if page_name == "Login":
+#             nav_items.append(page_name)
+#         elif require_roles_for_page(page_name, current_user):
+#             nav_items.append(page_name)
+
+#     # Default selection
+#     default_index = 0 if not is_logged_in() else min(1, len(nav_items) - 1)
+
+#     choice = st.sidebar.radio(
+#         "Go to",
+#         nav_items,
+#         index=default_index,
+#     )
+
+#     # --------------------------------------------------------
+#     # Page Render
+#     # --------------------------------------------------------
+#     module_path = PAGES.get(choice)
+#     if module_path:
+#         import_and_run(module_path)
+#     else:
+#         st.error("Page not found.")
+
+# # ============================================================
+# # ENTRY POINT
+# # ============================================================
+# if __name__ == "__main__":
+#     main()
 
 
 # # streamlit_app/app.py
