@@ -3,6 +3,7 @@ import streamlit as st
 from pathlib import Path
 from streamlit_app.utils.auth_utils import is_logged_in
 from streamlit_app.utils.data_access import load_json
+import os
 
 DB_ROOT = Path(os.getcwd()) / "backend" / "db" / "json_db"
 L2_PATH = DB_ROOT / "assessments_level2.json"

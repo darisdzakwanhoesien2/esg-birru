@@ -6,6 +6,7 @@ from streamlit_app.utils.data_access import load_json, write_json
 from datetime import datetime
 import pytesseract  # optional; placeholder, may not be installed
 from PIL import Image
+import os
 
 DB_ROOT = Path(os.getcwd()) / "backend" / "db" / "json_db"
 DOCS_PATH = DB_ROOT / "documents.json"

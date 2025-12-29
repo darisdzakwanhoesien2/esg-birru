@@ -4,10 +4,12 @@ I also include **complete JSON-based data structures** that can later be migrate
 
       "email": "admin@certify.com",
       "password_hash": "HASH_ADMIN",
-      
+
 ---
 
 https://chatgpt.com/c/69246b65-4da8-832d-abeb-62001e2bd43b
+https://esg-rating-new.streamlit.app
+https://share.streamlit.io/?utm_source=streamlit&utm_medium=referral&utm_campaign=main&utm_content=-ss-streamlit-io-cloudpagehero
 
 # ✅ **1. Project Directory Structure (Full Production-Ready Design)**
 

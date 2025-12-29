@@ -5,6 +5,7 @@ from datetime import datetime
 from streamlit_app.utils.auth_utils import get_current_user, is_logged_in
 from streamlit_app.utils.data_access import load_json, write_json
 import uuid
+import os
 
 DB_ROOT = Path(os.getcwd()) / "backend" / "db" / "json_db"
 DOCS_PATH = DB_ROOT / "documents.json"

@@ -3,6 +3,7 @@ import streamlit as st
 from pathlib import Path
 from streamlit_app.utils.data_access import load_json, write_json
 from streamlit_app.utils.auth_utils import is_logged_in, get_current_user
+import os
 
 DB_ROOT = Path(os.getcwd()) / "backend" / "db" / "json_db"
 CLUSTERS_PATH = DB_ROOT / "clusters.json"

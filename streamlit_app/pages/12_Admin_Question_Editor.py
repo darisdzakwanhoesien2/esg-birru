@@ -3,6 +3,7 @@ import streamlit as st
 from pathlib import Path
 from streamlit_app.utils.auth_utils import is_logged_in, get_current_user
 from streamlit_app.utils.data_access import load_json, write_json
+import os
 
 DB_ROOT = Path(os.getcwd()) / "backend" / "db" / "json_db"
 QUEST_PATH = DB_ROOT / "questions.json"
