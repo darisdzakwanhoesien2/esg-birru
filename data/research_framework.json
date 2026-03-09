@@ -1,0 +1,161 @@
+{
+  "research_questions": [
+    {
+      "id": "RQ1",
+      "title": "Sentence-Level ESG Consistency",
+      "question": "How consistent are large language models in extracting ESG-relevant sentences from the same disclosure documents?"
+    },
+    {
+      "id": "RQ2",
+      "title": "Aspect–Sentiment–Tone Distributions",
+      "question": "How do sentiment and tone distributions vary across ESG aspect categories at the sentence level?"
+    },
+    {
+      "id": "RQ3",
+      "title": "Tone Bias and Imbalance",
+      "question": "Do LLMs exhibit systematic tone bias (e.g., overuse of commitments versus outcomes) across ESG categories?"
+    },
+    {
+      "id": "RQ4",
+      "title": "Grounding and Hallucination",
+      "question": "To what extent are extracted ESG sentences grounded in the original source documents?"
+    },
+    {
+      "id": "RQ5",
+      "title": "Explainable Aspect Clustering",
+      "question": "Can manual, ontology-driven aspect clustering improve interpretability without sacrificing sentence-level traceability?"
+    }
+  ],
+
+  "objectives": [
+    {
+      "id": "O1",
+      "text": "Evaluate inter-model consistency in ESG sentence extraction and labeling"
+    },
+    {
+      "id": "O2",
+      "text": "Analyze sentence-level sentiment and tone distributions across ESG aspects"
+    },
+    {
+      "id": "O3",
+      "text": "Detect and quantify tone imbalance and annotation bias"
+    },
+    {
+      "id": "O4",
+      "text": "Ensure grounding fidelity of ESG sentences to source documents"
+    },
+    {
+      "id": "O5",
+      "text": "Develop auditable, ontology-driven aspect clustering for ESG narratives"
+    }
+  ],
+
+  "methodology": [
+    {
+      "id": "M1",
+      "label": "Sentence Extraction",
+      "description": "Extract ESG-relevant sentences from disclosure documents using multiple LLMs."
+    },
+    {
+      "id": "M2",
+      "label": "Ontology Normalization",
+      "description": "Normalize extracted sentences into predefined ESG aspect, sentiment, and tone ontologies."
+    },
+    {
+      "id": "M3",
+      "label": "Distribution Analysis",
+      "description": "Compute global and conditional distributions of aspects, sentiment, and tone."
+    },
+    {
+      "id": "M4",
+      "label": "Minimum-Tone Analysis",
+      "description": "Identify sparsity and imbalance using minimum-tone metrics across aspect–sentiment groups."
+    },
+    {
+      "id": "M5",
+      "label": "Grounding Audit",
+      "description": "Verify that extracted ESG sentences are present in the original source text."
+    },
+    {
+      "id": "M6",
+      "label": "Model Comparison",
+      "description": "Compare sentence coverage and labeling agreement across multiple LLMs."
+    },
+    {
+      "id": "M7",
+      "label": "Manual Aspect Clustering",
+      "description": "Cluster fine-grained aspects into auditable, human-defined thematic groups."
+    }
+  ],
+
+  "hypotheses": [
+    {
+      "id": "H1",
+      "text": "Different LLMs produce significantly different ESG sentence coverage on identical documents"
+    },
+    {
+      "id": "H2",
+      "text": "Certain ESG aspects are systematically associated with dominant tones such as commitments over outcomes"
+    },
+    {
+      "id": "H3",
+      "text": "Grounding audits reveal non-trivial rates of hallucinated or weakly grounded ESG sentences"
+    },
+    {
+      "id": "H4",
+      "text": "Manual ontology-driven aspect clustering improves interpretability of ESG narratives without reducing traceability"
+    }
+  ],
+
+  "metrics": {
+    "coverage": [
+      "Sentence_Coverage_Rate",
+      "Aspect_Coverage_Distribution",
+      "Missing_Sentence_Rate"
+    ],
+    "distribution": [
+      "Aspect_Frequency",
+      "Sentiment_Balance",
+      "Tone_Balance",
+      "Tone_Entropy"
+    ],
+    "grounding": [
+      "Grounded_Rate",
+      "Hallucination_Rate",
+      "Partial_Match_Rate"
+    ],
+    "agreement": [
+      "Sentence_Overlap_Jaccard",
+      "Label_Agreement_Rate",
+      "Tone_Divergence_Score"
+    ]
+  },
+
+  "connections": [
+    { "source": "RQ1", "target": "O1" },
+    { "source": "RQ2", "target": "O2" },
+    { "source": "RQ3", "target": "O3" },
+    { "source": "RQ4", "target": "O4" },
+    { "source": "RQ5", "target": "O5" },
+
+    { "source": "O1", "target": "M1" },
+    { "source": "O1", "target": "M6" },
+    { "source": "O2", "target": "M2" },
+    { "source": "O2", "target": "M3" },
+    { "source": "O3", "target": "M4" },
+    { "source": "O4", "target": "M5" },
+    { "source": "O5", "target": "M7" },
+
+    { "source": "M6", "target": "H1" },
+    { "source": "M4", "target": "H2" },
+    { "source": "M5", "target": "H3" },
+    { "source": "M7", "target": "H4" },
+
+    { "source": "H1", "target": "Sentence_Coverage_Rate" },
+    { "source": "H1", "target": "Sentence_Overlap_Jaccard" },
+    { "source": "H2", "target": "Tone_Balance" },
+    { "source": "H2", "target": "Tone_Entropy" },
+    { "source": "H3", "target": "Hallucination_Rate" },
+    { "source": "H4", "target": "Label_Agreement_Rate" }
+  ]
+}

@@ -658,3 +658,388 @@ If this is for a thesis, the **next best step** is:
 👉 **Turn RQs into hypotheses + evaluation plan**
 
 Just say the word.
+
+Great question — at this point your system is **no longer just an app**, it’s a **research-grade socio-technical framework**. Below is a **proper academic research framing** that aligns with what you’ve already built (multi-role ESG certification, evidence-based validation, OCR/media checking, explainability, graph modeling).
+
+I’ll structure this like a **methods section + proposal**, so it’s directly usable for:
+
+* a thesis
+* a conference/workshop paper
+* a grant / PhD proposal
+* or a research-based product justification
+
+---
+
+## 1️⃣ Research Problem Statement
+
+> **Problem:**
+> Existing ESG certification and rating systems are often:
+
+* opaque (black-box scores),
+* biased toward large firms,
+* weakly grounded in verifiable evidence,
+* and poorly adapted for SMEs and dynamic regulatory environments.
+
+Most systems rely on **self-reported questionnaires** or **manual audits**, which are:
+
+* costly,
+* slow,
+* inconsistent,
+* and vulnerable to greenwashing.
+
+👉 **Research gap:**
+There is no unified, **evidence-grounded, explainable, graph-based ESG certification framework** that integrates:
+
+* structured self-assessment,
+* document-level verification,
+* external media scrutiny,
+* role-based governance,
+* and transparent scoring logic.
+
+Your system directly targets this gap.
+
+---
+
+## 2️⃣ High-level Research Aim
+
+> **To design, implement, and evaluate an explainable, evidence-driven ESG certification framework that integrates self-assessment, document verification, media intelligence, and graph-based reasoning for trustworthy sustainability evaluation.**
+
+---
+
+## 3️⃣ Core Research Questions (RQs)
+
+### **RQ1 — Framework Design**
+
+**How can ESG certification be modeled as a multi-layer, evidence-grounded system rather than a static questionnaire-based score?**
+
+* Focus: system architecture, levels (L1 vs L2), governance
+* Output: conceptual + technical framework
+
+---
+
+### **RQ2 — Evidence & Verification**
+
+**To what extent does document-level and media-based verification improve the reliability of ESG self-assessments?**
+
+* Compare:
+
+  * self-reported answers only (Level 1)
+  * vs evidence-supported answers (Level 2)
+
+---
+
+### **RQ3 — Explainability**
+
+**How can explainability be operationalized in ESG certification to support trust, auditability, and regulatory compliance?**
+
+* Explain:
+
+  * why a score was assigned
+  * which evidence influenced it
+  * what risks or gaps remain
+
+---
+
+### **RQ4 — Graph-based Modeling**
+
+**How can graph-based representations enhance ESG reasoning, traceability, and cross-entity analysis?**
+
+* Nodes: companies, questions, documents, media items, risks
+* Edges: supports, contradicts, relates_to, verified_by
+
+---
+
+### **RQ5 — Industry Sensitivity**
+
+**How does industry-aware clustering affect ESG performance interpretation and benchmarking?**
+
+* Avoids “one-size-fits-all” ESG scoring
+* Enables sector-adjusted comparisons
+
+---
+
+### **RQ6 — Governance & Roles**
+
+**How do role-based interactions (company, auditor, aggregator, admin) influence data quality and certification outcomes?**
+
+* Multi-actor accountability
+* Separation of powers
+
+---
+
+## 4️⃣ Research Objectives (Concrete & Measurable)
+
+### **O1 — System Design**
+
+Design a **two-level ESG certification framework**:
+
+* Level 1: structured self-assessment
+* Level 2: evidence-validated assessment
+
+---
+
+### **O2 — Evidence Integration**
+
+Develop pipelines for:
+
+* document ingestion,
+* OCR-based information extraction,
+* media/news screening,
+* evidence-to-claim linking.
+
+---
+
+### **O3 — Explainability Layer**
+
+Implement explainability mechanisms that:
+
+* trace scores back to evidence,
+* surface uncertainty and risk,
+* provide actionable improvement suggestions.
+
+---
+
+### **O4 — Graph Representation**
+
+Model ESG certification as a **knowledge graph** enabling:
+
+* traceability,
+* reasoning,
+* cross-company comparison.
+
+---
+
+### **O5 — Empirical Evaluation**
+
+Empirically evaluate:
+
+* score stability,
+* disagreement reduction,
+* detection of inconsistencies or greenwashing signals.
+
+---
+
+## 5️⃣ Hypotheses (Testable)
+
+### **H1 — Evidence Improves Reliability**
+
+> ESG scores supported by document and media evidence show **lower variance** and **higher inter-rater agreement** than self-reported scores alone.
+
+**Metric ideas:**
+
+* score variance
+* Cohen’s Kappa between auditors
+* revision rate after audit
+
+---
+
+### **H2 — Explainability Increases Trust**
+
+> Explainable ESG reports increase perceived trustworthiness and usability among stakeholders.
+
+**Metric ideas:**
+
+* user trust survey
+* task completion time
+* qualitative feedback coding
+
+---
+
+### **H3 — Graph-based Modeling Improves Detection**
+
+> Graph-based ESG representations improve the detection of inconsistencies and risk signals compared to flat tabular models.
+
+**Metric ideas:**
+
+* contradiction detection rate
+* manual audit findings overlap
+* false positive / false negative rates
+
+---
+
+### **H4 — Industry-aware Clustering Matters**
+
+> Industry-adjusted ESG benchmarking leads to significantly different performance interpretations compared to global scoring.
+
+**Metric ideas:**
+
+* rank changes across clusters
+* score normalization error
+* within-industry variance
+
+---
+
+### **H5 — Media Signals Add Predictive Value**
+
+> External media and social signals provide early indicators of ESG risks not captured in self-assessments.
+
+**Metric ideas:**
+
+* lead time between media signal and assessment downgrade
+* correlation with later regulatory or reputational events
+
+---
+
+## 6️⃣ Methodology
+
+### **6.1 System Development (Design Science Research)**
+
+You are effectively doing **Design Science Research (DSR)**:
+
+1. Problem identification (ESG opacity, greenwashing)
+2. Artifact design (your platform)
+3. Implementation (Streamlit + JSON → graph)
+4. Evaluation (quantitative + qualitative)
+
+This aligns well with IS / HCI / AI governance research.
+
+---
+
+### **6.2 Data Sources**
+
+* **Internal**
+
+  * Self-assessment answers
+  * Uploaded documents
+  * OCR-extracted text
+  * Certification lifecycle logs
+
+* **External**
+
+  * News articles (1–2 year window)
+  * Social media posts
+  * Industry benchmarks
+
+---
+
+### **6.3 Processing Pipeline**
+
+1. Questionnaire → structured claims
+2. Documents → OCR → extracted evidence
+3. Media → sentiment / ESG tagging
+4. Evidence linking → claim validation
+5. Graph construction
+6. Scoring + explainability generation
+
+---
+
+### **6.4 Graph Modeling**
+
+**Nodes**
+
+* Company
+* Question
+* Answer
+* Document
+* Media Item
+* Risk
+* Industry
+
+**Edges**
+
+* answers
+* supported_by
+* contradicted_by
+* mentions
+* belongs_to_industry
+* verified_by
+
+This enables:
+
+* traversal-based explanations
+* impact analysis
+* dependency tracing
+
+---
+
+## 7️⃣ Evaluation Metrics
+
+### **Technical Metrics**
+
+* OCR accuracy
+* evidence coverage ratio
+* contradiction detection rate
+* processing latency
+
+---
+
+### **Scoring Metrics**
+
+* score stability over time
+* revision frequency
+* cross-auditor agreement
+
+---
+
+### **Explainability Metrics**
+
+* trace depth (steps from score → evidence)
+* explanation completeness
+* user comprehension scores
+
+---
+
+### **Governance Metrics**
+
+* role interaction frequency
+* audit intervention rate
+* certification lifecycle duration
+
+---
+
+## 8️⃣ Expected Contributions
+
+### **Theoretical**
+
+* A formalized model of **evidence-based ESG certification**
+* Integration of explainable AI and sustainability governance
+
+---
+
+### **Methodological**
+
+* Graph-based ESG evaluation methodology
+* Multi-source verification pipeline
+
+---
+
+### **Practical**
+
+* SME-accessible ESG certification
+* Transparent alternative to black-box ratings
+* Tool for regulators, investors, aggregators
+
+---
+
+## 9️⃣ Positioning (Very Important)
+
+You can position this as:
+
+* **AI for Sustainability**
+* **Explainable AI (XAI)**
+* **Computational Social Responsibility**
+* **Digital Governance Systems**
+* **Greenwashing Detection**
+* **Knowledge Graphs for ESG**
+
+This fits venues like:
+
+* ACM FAccT
+* AAAI/ICWSM workshops
+* Sustainability / CSR journals
+* Information Systems conferences
+* AI governance tracks
+
+---
+
+## 10️⃣ Next (if you want)
+
+I can next:
+
+* map these RQs directly to **your existing code modules**
+* help you write a **methods section** (LaTeX-ready)
+* design an **experimental setup**
+* formalize the **graph schema**
+* convert this into a **PhD proposal outline**
+
+Just tell me which direction you want to go.

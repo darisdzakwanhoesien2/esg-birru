@@ -1,0 +1,157 @@
+{
+  "research_questions": [
+    {
+      "id": "RQ1",
+      "title": "Evidence-Based ESG Certification",
+      "question": "How can ESG certification be modeled as a multi-level, evidence-grounded framework rather than a purely self-reported questionnaire?"
+    },
+    {
+      "id": "RQ2",
+      "title": "Verification & Reliability",
+      "question": "To what extent does document-level and media-based verification improve the reliability of ESG self-assessments?"
+    },
+    {
+      "id": "RQ3",
+      "title": "Explainability & Transparency",
+      "question": "How can explainable mechanisms be integrated into ESG certification to support trust, auditability, and regulatory compliance?"
+    },
+    {
+      "id": "RQ4",
+      "title": "Graph-Based Reasoning",
+      "question": "How can graph-based representations enhance ESG reasoning, traceability, and cross-company analysis?"
+    },
+    {
+      "id": "RQ5",
+      "title": "Industry Sensitivity",
+      "question": "How does industry-aware clustering affect ESG performance interpretation and benchmarking?"
+    }
+  ],
+
+  "objectives": [
+    {
+      "id": "O1",
+      "text": "Design a two-level ESG certification framework (self-assessment and evidence-validated)"
+    },
+    {
+      "id": "O2",
+      "text": "Integrate document and media verification into ESG assessment workflows"
+    },
+    {
+      "id": "O3",
+      "text": "Develop explainable ESG scoring and reporting mechanisms"
+    },
+    {
+      "id": "O4",
+      "text": "Model ESG certification using graph-based representations"
+    },
+    {
+      "id": "O5",
+      "text": "Enable industry-aware ESG benchmarking and clustering"
+    }
+  ],
+
+  "methodology": [
+    {
+      "id": "M1",
+      "label": "Self-Assessment Design",
+      "description": "Design structured ESG self-assessment questions with single, multiple, and essay-based responses."
+    },
+    {
+      "id": "M2",
+      "label": "Document Verification",
+      "description": "Collect supporting documents and apply OCR to extract verifiable ESG evidence."
+    },
+    {
+      "id": "M3",
+      "label": "Media Screening",
+      "description": "Analyze news and social media signals over a 1–2 year window to identify ESG-related risks."
+    },
+    {
+      "id": "M4",
+      "label": "Scoring & Normalization",
+      "description": "Aggregate self-assessment and evidence signals into normalized ESG scores."
+    },
+    {
+      "id": "M5",
+      "label": "Explainability Layer",
+      "description": "Generate traceable explanations linking scores to evidence, risks, and gaps."
+    },
+    {
+      "id": "M6",
+      "label": "Graph Construction",
+      "description": "Construct a knowledge graph linking companies, questions, documents, media, and risks."
+    },
+    {
+      "id": "M7",
+      "label": "Industry Clustering",
+      "description": "Cluster companies by industry to enable sector-adjusted ESG benchmarking."
+    }
+  ],
+
+  "hypotheses": [
+    {
+      "id": "H1",
+      "text": "Evidence-supported ESG assessments exhibit lower score variance than self-reported assessments alone"
+    },
+    {
+      "id": "H2",
+      "text": "Explainable ESG reports increase perceived trust and usability among stakeholders"
+    },
+    {
+      "id": "H3",
+      "text": "Graph-based ESG representations improve the detection of inconsistencies and risk signals"
+    },
+    {
+      "id": "H4",
+      "text": "Industry-aware ESG clustering significantly alters ESG performance interpretation"
+    }
+  ],
+
+  "metrics": {
+    "reliability": [
+      "Score_Variance",
+      "Inter_Rater_Agreement",
+      "Revision_Frequency"
+    ],
+    "explainability": [
+      "Trace_Depth",
+      "Explanation_Completeness",
+      "User_Comprehension_Score"
+    ],
+    "risk_detection": [
+      "Contradiction_Detection_Rate",
+      "Media_Risk_Lead_Time"
+    ],
+    "benchmarking": [
+      "Within_Industry_Variance",
+      "Cross_Industry_Rank_Shift"
+    ]
+  },
+
+  "connections": [
+    { "source": "RQ1", "target": "O1" },
+    { "source": "RQ2", "target": "O2" },
+    { "source": "RQ3", "target": "O3" },
+    { "source": "RQ4", "target": "O4" },
+    { "source": "RQ5", "target": "O5" },
+
+    { "source": "O1", "target": "M1" },
+    { "source": "O2", "target": "M2" },
+    { "source": "O2", "target": "M3" },
+    { "source": "O3", "target": "M4" },
+    { "source": "O3", "target": "M5" },
+    { "source": "O4", "target": "M6" },
+    { "source": "O5", "target": "M7" },
+
+    { "source": "M4", "target": "H1" },
+    { "source": "M5", "target": "H2" },
+    { "source": "M6", "target": "H3" },
+    { "source": "M7", "target": "H4" },
+
+    { "source": "H1", "target": "Score_Variance" },
+    { "source": "H1", "target": "Inter_Rater_Agreement" },
+    { "source": "H2", "target": "User_Comprehension_Score" },
+    { "source": "H3", "target": "Contradiction_Detection_Rate" },
+    { "source": "H4", "target": "Cross_Industry_Rank_Shift" }
+  ]
+}
