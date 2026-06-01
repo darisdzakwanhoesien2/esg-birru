@@ -12,6 +12,8 @@ def load_json(path: Path) -> Dict[str, Any]:
     except json.JSONDecodeError:
         return {}
     except Exception as e:
+        # Unexpected failures (permissions, encoding, etc.) should surface clearly
+        # during development; re-raise without swallowing the underlying traceback.
         raise
 
 def write_json(path: Path, payload: Dict[str, Any]) -> None:

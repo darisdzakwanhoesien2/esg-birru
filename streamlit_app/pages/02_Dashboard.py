@@ -1,15 +1,10 @@
 # streamlit_app/pages/02_Dashboard.py
 import streamlit as st
-import sys
-import os
-
-# Add the root directory to the Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 from streamlit_app.utils.auth_utils import get_current_user, is_logged_in
 from streamlit_app.utils.data_access import load_json
-from pathlib import Path
+from streamlit_app.utils.paths import get_db_root
 
-DB_ROOT = Path(os.getcwd()) / "backend" / "db" / "json_db"
+DB_ROOT = get_db_root()
 
 def run(st=st):
     st.header("Dashboard")

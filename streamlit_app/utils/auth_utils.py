@@ -1,6 +1,5 @@
 import streamlit as st
 from typing import Optional
-from datetime import datetime
 
 from streamlit_app.utils.data_access import load_json, write_json
 from streamlit_app.utils.paths import get_db_root
@@ -12,6 +11,12 @@ USERS_PATH = DB_ROOT / "users.json"
 # SESSION
 # ============================================================
 def ensure_session():
+    """
+    Initializes Streamlit session state used by the auth layer.
+
+    Streamlit pages can be imported/run in different orders; keeping this as a
+    single source of truth avoids KeyError surprises when accessing session_state.
+    """
     if "auth" not in st.session_state:
         st.session_state.auth = {"logged_in": False, "user_id": None}
 
@@ -48,6 +53,7 @@ def is_logged_in() -> bool:
     return st.session_state.auth["logged_in"]
 
 def get_current_user() -> Optional[dict]:
+    ensure_session()
     uid = st.session_state.auth.get("user_id")
     if not uid:
         return None

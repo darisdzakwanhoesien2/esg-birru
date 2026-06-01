@@ -5,11 +5,11 @@ from datetime import datetime
 from streamlit_app.utils.auth_utils import get_current_user, is_logged_in
 from streamlit_app.utils.data_access import load_json, write_json
 import uuid
-import os
+from streamlit_app.utils.paths import get_db_root, get_project_root
 
-DB_ROOT = Path(os.getcwd()) / "backend" / "db" / "json_db"
+DB_ROOT = get_db_root()
 DOCS_PATH = DB_ROOT / "documents.json"
-STORAGE_ROOT = Path(os.getcwd()).parent / "storage" / "uploads"
+STORAGE_ROOT = get_project_root() / "storage" / "uploads"
 
 def run(st=st):
     st.header("Upload Evidence Document")

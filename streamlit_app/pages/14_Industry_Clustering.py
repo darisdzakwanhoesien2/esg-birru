@@ -3,9 +3,10 @@ import streamlit as st
 from pathlib import Path
 from streamlit_app.utils.data_access import load_json, write_json
 from streamlit_app.utils.auth_utils import is_logged_in, get_current_user
-import os
+from streamlit_app.utils.paths import get_db_root
 
-DB_ROOT = Path(os.getcwd()) / "backend" / "db" / "json_db"
+# Avoid `os.getcwd()` so this works reliably across different launch contexts.
+DB_ROOT = get_db_root()
 CLUSTERS_PATH = DB_ROOT / "clusters.json"
 COMP_PATH = DB_ROOT / "companies.json"
 L1_PATH = DB_ROOT / "assessments_level1.json"

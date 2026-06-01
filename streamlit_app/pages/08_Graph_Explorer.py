@@ -1,13 +1,14 @@
 # streamlit_app/pages/08_Graph_Explorer.py
 import streamlit as st
 from pathlib import Path
-from streamlit_app.utils.auth_utils import is_logged_in, get_current_user
+from streamlit_app.utils.auth_utils import is_logged_in
 from streamlit_app.utils.data_access import load_json, write_json
+from streamlit_app.utils.paths import get_db_root
 import networkx as nx
 import matplotlib.pyplot as plt
-import os
 
-DB_ROOT = Path(os.getcwd()) / "backend" / "db" / "json_db"
+# Avoid `os.getcwd()` so this works reliably across different launch contexts.
+DB_ROOT = get_db_root()
 GRAPH_PATH = DB_ROOT / "graph_store.json"
 
 def run(st=st):
@@ -31,6 +32,9 @@ def run(st=st):
         ntype = st.selectbox("Type", ["Company","Document","Risk","Event","Entity"])
         name = st.text_input("Name")
         if st.form_submit_button("Add node"):
+            if not nid.strip():
+                st.error("Node ID is required.")
+                st.stop()
             nodes.append({"id": nid, "type": ntype, "name": name})
             write_json(GRAPH_PATH, {"graph": {"nodes": nodes, "edges": edges}})
             st.success("Node added")
@@ -39,12 +43,17 @@ def run(st=st):
         rel = st.text_input("Relation", key="rel")
         tgt = st.text_input("Target ID", key="tgt")
         if st.form_submit_button("Add edge"):
+            if not src.strip() or not tgt.strip() or not rel.strip():
+                st.error("Source, relation, and target are required.")
+                st.stop()
             edges.append({"source": src, "target": tgt, "relation": rel})
             write_json(GRAPH_PATH, {"graph": {"nodes": nodes, "edges": edges}})
             st.success("Edge added")
 
     if st.button("Render preview"):
         try:
+            # Convert the stored node/edge JSON into a NetworkX directed graph,
+            # then render it with a deterministic layout (seeded) for consistent previews.
             G = nx.DiGraph()
             for n in nodes:
                 G.add_node(n["id"], label=n.get("name"))

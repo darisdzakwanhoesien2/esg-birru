@@ -1,1045 +1,478 @@
-Below is a **full, scalable, production-ready directory structure** for your Streamlit-based certification platform **with multi-role users, Level 1 & Level 2 assessments, OCR/media verification, graph-based reasoning, and clustering by industry**.
-I also include **complete JSON-based data structures** that can later be migrated to **PostgreSQL + Neo4j**.
+# esg-birru
 
+Streamlit prototype for an ESG certification/rating workflow with:
+- Role-based login (Admin / Company / Auditor / Company_Aggregator)
+- Level 1 self-assessment (JSON-backed)
+- Level 2 evidence upload + auditor decision (JSON-backed)
+- Simple graph explorer (JSON → NetworkX render)
+- Simple industry “clustering” (centroid over Level 1 scores)
 
-      "email": "admin@certify.com",
-      "password_hash": "HASH_ADMIN",
+This repo is intentionally file-based (JSON under `backend/db/json_db/`) to keep the prototype easy to run and iterate.
 
----
+## Quickstart
 
-https://chatgpt.com/c/69246b65-4da8-832d-abeb-62001e2bd43b
-https://esg-rating-new.streamlit.app
-https://share.streamlit.io/?utm_source=streamlit&utm_medium=referral&utm_campaign=main&utm_content=-ss-streamlit-io-cloudpagehero
+### 1) Create a virtualenv + install deps
 
-# ✅ **1. Project Directory Structure (Full Production-Ready Design)**
-
-```
-certify_app/
-│
-├── streamlit_app/
-│   ├── app.py                                 # Main entry point (routing)
-│   ├── pages/
-│   │   ├── 01_Login.py
-│   │   ├── 02_Dashboard.py
-│   │   ├── 03_Company_Assessment_Level1.py
-│   │   ├── 04_Company_Assessment_Level2.py
-│   │   ├── 05_Document_Uploader.py
-│   │   ├── 06_OCR_Processor.py
-│   │   ├── 07_Media_Checker.py
-│   │   ├── 08_Graph_Explorer.py
-│   │   ├── 09_Reports_Level1.py
-│   │   ├── 10_Reports_Level2.py
-│   │   ├── 11_Aggregator_Company_Overview.py
-│   │   ├── 12_Admin_Question_Editor.py
-│   │   ├── 13_Admin_User_Manager.py
-│   │   ├── 14_Industry_Clustering.py
-│   │   └── 15_API_Diagnostics.py
-│   │
-│   ├── components/                             # Reusable Streamlit UI blocks
-│   │   ├── auth.py
-│   │   ├── cards.py
-│   │   ├── layout.py
-│   │   ├── charts.py
-│   │   └── tables.py
-│   │
-│   ├── utils/
-│   │   ├── auth_utils.py
-│   │   ├── file_utils.py
-│   │   ├── ocr_utils.py
-│   │   ├── media_utils.py
-│   │   ├── graph_utils.py
-│   │   ├── clustering.py
-│   │   └── report_generator.py
-│   │
-│   └── config/
-│       ├── app_config.yaml
-│       ├── roles_permissions.json
-│       └── industry_map.json
-│
-├── backend/                                   # Future microservice layer
-│   ├── api/
-│   │   ├── auth_api.py
-│   │   ├── ocr_api.py
-│   │   ├── media_api.py
-│   │   ├── graph_api.py
-│   │   └── report_api.py
-│   ├── db/
-│   │   ├── json_db/                            # Initial DB (file-based)
-│   │   │   ├── users.json
-│   │   │   ├── companies.json
-│   │   │   ├── assessments.json
-│   │   │   ├── documents.json
-│   │   │   ├── media_checks.json
-│   │   │   ├── graph_store.json
-│   │   │   └── clusters.json
-│   │   ├── neo4j/                              # For future migration
-│   │   │   ├── init_graph.cypher
-│   │   │   └── schema.cypher
-│   │   └── migrations/
-│   ├── services/
-│   │   ├── user_service.py
-│   │   ├── assessment_service.py
-│   │   ├── document_service.py
-│   │   ├── ocr_service.py
-│   │   ├── media_service.py
-│   │   ├── graph_service.py
-│   │   └── clustering_service.py
-│   └── models/
-│       ├── user_model.py
-│       ├── company_model.py
-│       ├── assessment_model.py
-│       ├── ocr_result_model.py
-│       ├── media_result_model.py
-│       └── graph_model.py
-│
-├── ai_modules/
-│   ├── ocr/                                   # PaddleOCR / Tesseract
-│   ├── media/
-│   │   ├── social_scraper/
-│   │   ├── news_scraper/
-│   │   ├── sentiment/
-│   │   └── stance/
-│   ├── graph_reasoning/
-│   ├── llm_explainability/
-│   └── clustering/
-│
-├── storage/
-│   ├── uploads/
-│   │   ├── raw_documents/
-│   │   ├── processed_documents/
-│   │   └── media_screenshots/
-│   ├── cache/
-│   └── logs/
-│       ├── access.log
-│       ├── ocr.log
-│       └── media_checker.log
-│
-├── tests/
-│   ├── test_api.py
-│   ├── test_graph.py
-│   ├── test_ocr.py
-│   ├── test_media.py
-│   ├── test_clustering.py
-│   └── test_streamlit_pages.py
-│
-├── requirements.txt
-├── Dockerfile
-└── README.md
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements.txt
 ```
 
----
+### 2) Run the app
 
-# ✅ **2. Multi-Role Access Structure**
-
-### Roles
-
-```
-Admin
-Company
-Company_Aggregator
-Auditor / Certifier
+```bash
+. .venv/bin/activate
+streamlit run streamlit_app/app.py
 ```
 
-### Permissions (example)
+## Seed accounts
 
-```
-Admin:
-  - manage_users
-  - edit_questions
-  - view_all_reports
+Seed users are stored in `backend/db/json_db/users.json`.
 
-Company:
-  - submit_assessment
-  - upload_documents
-  - view_own_reports
+Example credentials (dev-mode): the `password_hash` field is treated as plain text in this prototype.
 
-Company_Aggregator:
-  - view_company_status
-  - download_company_reports
+- `admin@certify.com` / `HASH_ADMIN` (roles: Admin)
+- `alice@acme.com` / `HASH_1` (roles: Company)
+- `audit@acme.com` / `HASH_2` (roles: Company, Auditor)
+- `group-lead@megagroup.com` / `HASH_3` (roles: Company_Aggregator)
 
-Auditor:
-  - verify_documents
-  - run_level2_checks
-  - generate_final_report
-```
+## Data storage
 
----
+- DB root: `backend/db/json_db/`
+- Common files:
+  - `users.json`
+  - `companies.json`
+  - `assessments_level1.json`
+  - `assessments_level2.json`
+  - `documents.json`
+  - `ocr_results.json`
+  - `graph_store.json`
+  - `clusters.json`
 
-# ✅ **3. Data Structure (JSON → scalable DB)**
+Uploads (Level 2 evidence) are written under `storage/uploads/<company_id>/`.
 
-Below are **fully defined schemas** for the system.
+## Notable implementation details
 
----
+- Routing/navigation: `streamlit_app/app.py`
+- Auth/RBAC: `streamlit_app/utils/auth_utils.py`
+- JSON IO helpers: `streamlit_app/utils/data_access.py`
+- Path handling: `streamlit_app/utils/paths.py`
 
-## **3.1 User JSON Structure**
+## Known limitations (prototype)
 
-```json
-{
-  "id": "user_124",
-  "role": ["Company", "Company_Aggregator"],
-  "email": "contact@acme.com",
-  "password_hash": "HASHED_PASSWORD",
-  "company_id": "comp_001",
-  "created_at": "2025-11-24T10:00:00Z"
-}
-```
+- Authentication is dev-mode (plain text compare) and is not secure for production.
+- There is no automated test suite in this repo yet.
+- Several pages are minimal “scaffolding” that currently just display JSON.
 
----
+## Notes
 
-## **3.2 Company Structure**
-
-```json
-{
-  "id": "comp_001",
-  "name": "ACME Manufacturing",
-  "industry": "Manufacturing",
-  "address": "123 Road, Finland",
-  "created_at": "2025-11-24T10:00:00Z",
-  "certification_status": {
-    "level1": "completed",
-    "level2": "in_progress"
-  }
-}
-```
+The previous long-form design notes and schemas were moved to `notes.md`.
 
 ---
 
-## **3.3 Assessment Structure**
+## Project Overview
 
-Each company has many assessments.
+`esg-birru` is a Streamlit-based prototype that demonstrates a lightweight ESG certification workflow for SMEs and certifiers:
 
-```json
-{
-  "assessment_id": "assess_1003",
-  "company_id": "comp_001",
-  "level": 1,
-  "question_id": "Q-14",
-  "question_type": "multiple_choice",
-  "answer": ["Option A", "Option D"],
-  "score": 0.82,
-  "submitted_at": "2025-11-24T09:12:00Z",
-  "reviewer": null,
-  "linked_documents": ["doc_201", "doc_202"],
-  "explainability": {
-    "llm_reasoning": "The selected options indicate strong compliance.",
-    "graph_relations": ["node_21 -> node_88"]
-  }
-}
-```
+- Companies can complete a Level 1 self-assessment and optionally upload supporting evidence.
+- Auditors/admins can review evidence and record Level 2 verification decisions.
+- The system stores data in JSON files (instead of a database) to keep iteration fast and transparent.
 
----
+The main problem it solves (in prototype form): providing a structured, evidence-aware ESG assessment flow that can be extended later into a production architecture (e.g., Postgres/Neo4j, real auth, services).
 
-## **3.4 Document Upload Structure**
+## Tech Stack
 
-```json
-{
-  "doc_id": "doc_201",
-  "company_id": "comp_001",
-  "assessment_id": "assess_1003",
-  "filename": "ISO9001_certificate.pdf",
-  "file_path": "/uploads/raw_documents/comp_001/",
-  "ocr_status": "processed",
-  "ocr_result_id": "ocr_224",
-  "uploaded_at": "2025-11-24T10:20:00Z"
-}
+- Language: Python 3
+- UI framework: Streamlit
+- Libraries:
+  - `networkx` + `matplotlib` (graph preview)
+  - `pillow` + `pytesseract` (OCR-related dependencies; OCR page is scaffolded)
+  - `bcrypt` (installed, but this prototype currently uses dev-mode plain-text password comparison)
+
+Dependencies are listed in `requirements.txt`.
+
+## Architecture Overview
+
+High-level components:
+
+- `streamlit_app/app.py`: Router + navigation. Dynamically imports page modules and calls their `run(st)` function.
+- `streamlit_app/pages/*`: Individual pages (Login, Dashboard, L1/L2, Graph Explorer, etc.).
+- `streamlit_app/utils/*`:
+  - `auth_utils.py`: Session + login + RBAC gatekeeping for pages.
+  - `paths.py`: Single source of truth for repo-relative paths.
+  - `data_access.py`: JSON load/write helpers.
+- `backend/db/json_db/*`: File-based “database” (seed users, companies, assessments, etc.).
+- `storage/uploads/*`: Uploaded evidence files (Level 2).
+
+Data flow (typical):
+
+1. User logs in (`users.json`) → session state stores `user_id`.
+2. Level 1 / Level 2 pages read and write JSON files under `backend/db/json_db/`.
+3. Evidence uploads are saved to disk and referenced from `documents.json`.
+
+## Installation & Setup
+
+### Prerequisites
+
+- Python 3.10+ (tested with Python 3.12)
+
+Optional (for OCR features):
+- Tesseract installed on your system (`pytesseract` is only a wrapper).
+
+### Setup steps
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements.txt
 ```
 
----
+### Run locally
 
-## **3.5 OCR Results**
-
-```json
-{
-  "ocr_id": "ocr_224",
-  "doc_id": "doc_201",
-  "extracted_text": "This certifies that ACME ...",
-  "named_entities": [
-    { "type": "ORG", "value": "ACME" },
-    { "type": "DATE", "value": "2023-08-22" }
-  ],
-  "confidence_score": 0.91,
-  "processed_at": "2025-11-24T10:22:10Z"
-}
+```bash
+. .venv/bin/activate
+streamlit run streamlit_app/app.py
 ```
 
----
+## Usage Guide
 
-## **3.6 Media Checker Structure**
+### Log in
 
-```json
-{
-  "media_id": "media_509",
-  "company_id": "comp_001",
-  "platform": "news",
-  "source_url": "https://example.com/article",
-  "content_text": "ACME faces investigation for ...",
-  "sentiment": -0.6,
-  "stance": "negative",
-  "relevance_score": 0.72,
-  "verified_date": "2025-11-24T11:05:00Z"
-}
-```
+1. Open the app in your browser (Streamlit prints the local URL).
+2. Go to **Login**.
+3. Use one of the seed accounts from `backend/db/json_db/users.json`.
 
-Supports **Twitter/X, Facebook, LinkedIn, Reddit, Local News APIs**.
+Example:
+- Email: `admin@certify.com`
+- Password: `HASH_ADMIN`
 
----
+### Company flow (Level 1 → Level 2 evidence)
 
-## **3.7 Graph Database JSON (pre-Neo4j)**
+1. Log in as a Company user (e.g. `alice@acme.com` / `HASH_1`).
+2. Go to **Assessment (Level 1)** to view existing Level 1 JSON data (this page is currently minimal).
+3. Go to **Assessment (Level 2)** or **Upload Document** to upload evidence.
+4. Verify a new entry is appended to `backend/db/json_db/documents.json`.
 
-```json
-{
-  "nodes": [
-    { "id": "node_21", "type": "Company", "name": "ACME" },
-    { "id": "node_88", "type": "Document", "name": "ISO9001" }
-  ],
-  "edges": [
-    {
-      "source": "node_21",
-      "target": "node_88",
-      "relation": "HAS_DOCUMENT"
-    }
-  ]
-}
-```
+### Auditor flow (review evidence)
 
----
+1. Log in as an Auditor-capable user (e.g. `audit@acme.com` / `HASH_2`) or Admin.
+2. Go to **Assessment (Level 2)**.
+3. Select a pending document and apply a decision.
+4. Verify a new entry is appended to `backend/db/json_db/assessments_level2.json`.
 
-## **3.8 Cluster Structure (by Industry)**
+### Graph Explorer
 
-```json
-{
-  "industry": "Manufacturing",
-  "clusters": [
-    {
-      "cluster_id": "mfg_cluster_01",
-      "description": "High compliance, strong documentation",
-      "companies": ["comp_001", "comp_005"],
-      "centroid_features": {
-        "avg_level1_score": 0.83,
-        "avg_level2_score": 0.79,
-        "media_risk": 0.12
-      }
-    }
-  ]
-}
-```
+1. Log in.
+2. Go to **Graph Explorer**.
+3. Add nodes/edges (saved to `backend/db/json_db/graph_store.json`).
+4. Click **Render preview** to see a quick NetworkX visualization.
 
----
+## API Reference (if applicable)
 
-# ✅ **4. How the Certification Pipeline Works**
+This repo does not expose a separate HTTP API at the moment.
 
-### **Level 1**
+If you later add an API layer, the natural boundary is `backend/` (currently used only for JSON data files).
 
-✔ Company answers questions
-✔ Auto-score
-✔ Store in JSON
-✔ Generate explainability (LLM)
-✔ Level 1 Report
+## Environment Variables
+
+No `.env` is required for the current prototype.
+
+If you plan to productionize, typical variables you may introduce:
+
+- `APP_ENV` (e.g., `dev`, `prod`)
+- `DB_URL` (Postgres connection string)
+- `NEO4J_URI`, `NEO4J_USER`, `NEO4J_PASSWORD`
+- `STREAMLIT_SERVER_PORT`
+- `AUTH_MODE` (e.g., `dev_plaintext`, `bcrypt`)
+
+## Contributing Guide
+
+- Keep changes small and focused.
+- Prefer updating `streamlit_app/utils/paths.py` (or using its helpers) rather than introducing new ad-hoc path logic.
+- JSON data lives under `backend/db/json_db/`; avoid committing large uploaded files under `storage/` unless explicitly needed.
+
+Suggested workflow:
+
+1. Create a new branch.
+2. Make changes with clear, scoped commits.
+3. Run `python -m compileall -q .` in your venv.
+4. Open a PR describing what changed and how to test it.
+
+## License
+
+No license file is included yet.
+
+If you want this to be open source, add a `LICENSE` file (MIT, Apache-2.0, or GPL-3.0 are common choices) and update this section accordingly.
 
 ---
 
-### **Level 2**
+## Scaling Guide
 
-✔ Company uploads evidence
-✔ OCR
-✔ News/Social media scraping (1–2 years)
-✔ Media sentiment, stance, fact-checking
-✔ Graph linking (Company → Document → Risk)
-✔ Industry clustering
-✔ Level 2 Explainability
-✔ Final certification report
+This repo is a JSON-backed Streamlit prototype. Under load, the first things to fail will be shared-file writes, single-process bottlenecks, and lack of isolation between users/sessions. The notes below describe a realistic path from MVP → production-grade.
 
----
+### 1) Current Bottlenecks (what breaks first)
 
-# ✅ **5. Want me to generate ALL .py files?**
+- **JSON files as a “DB”**: concurrent writes to `backend/db/json_db/*.json` will eventually cause lost updates (last writer wins), partial writes, or corruption.
+- **No locking/transactions**: uploads + JSON update aren’t atomic across processes.
+- **Single Streamlit process**: Streamlit apps typically run as a single Python process per replica; CPU-heavy tasks (OCR, graph ops) will block requests.
+- **Local filesystem uploads**: `storage/uploads/...` does not scale across multiple instances without shared storage.
+- **Session/auth model**: `st.session_state` is per-process/per-browser session; multiple replicas require sticky sessions or moving auth/session to a shared store.
+- **Observability gaps**: no structured logging/metrics/tracing; diagnosing performance and errors under load becomes guesswork.
 
-I can generate:
+### 2) Database Scaling
 
-✔ `app.py` (Streamlit router)
-✔ Full `pages/*.py` page code
-✔ Data access layer
-✔ JSON read/write functions
-✔ Graph ingestion scripts
-✔ OCR/Media utils
-✔ Auto-report generator (Level 1 + Level 2)
+#### Step 0: Replace JSON with a real DB
 
-Just tell me:
+Recommended baseline:
+- **PostgreSQL** for users/companies/assessments/documents/audit logs.
+- Optional: **Neo4j** (or Postgres + `pgvector` / graph tables) if you truly need graph queries beyond simple visualization.
 
-**“Generate me the entire backend code”**
-or
-**“Start with app.py + Login page”**
+#### Indexing (Postgres)
 
-I can deliver everything in clean, production-ready style.
+Likely indexes (based on current JSON fields):
+- `users(email)` unique index
+- `documents(company_id)`, `documents(assessment_id)`, `documents(ocr_status)`
+- `assessments_level1(company_id, submitted_at)`
+- `assessments_level2(company_id, completed_at)`
 
-👉 Next: Batch 4?
+#### Caching
 
-Batch 4 can include:
+- Add **Redis** for:
+  - session tokens / rate limits
+  - caching “dashboard stats” aggregates
+  - caching expensive report computations
 
-🔥 Migration-ready SQL schema (PostgreSQL)
-🔥 Migration-ready Neo4j graph schema
-🔥 API endpoint designs for each dataset
-🔥 Full example queries (Cypher, SQL, Streamlit functions)# esg-birru
+#### Read scaling
 
-Yes — and this is a **very good move**. Turning this into a **research-based production system** means you need a **clear Research Question (RQ) → Method → Artifact → Evaluation** workflow that *directly maps* to your existing ESG product pipeline.
+- Start with **read replicas** once read traffic dominates writes (dashboards, reports, analytics).
+- Move heavy analytics to a warehouse later (BigQuery/Snowflake/Redshift) if needed.
 
-Below is a **clean, thesis-ready Research Question Workflow**, aligned with **ABSA, explainability, neuro-symbolic ESG scoring, and SME constraints**.
+#### Sharding
 
----
+Avoid sharding early. When you truly need it, a natural shard key is:
+- `company_id` (most queries are tenant/company scoped)
 
-## 1️⃣ Core Research Framing (Big Picture)
+### 3) Backend Scaling
 
-### 🎯 Research Objective (High-level)
+Streamlit is great for prototypes, but for production scale you’ll typically split into:
 
-> To design and evaluate an **explainable, evidence-aware ESG scoring system for SMEs** that balances **practical deployability** with **scientific rigor**, using **self-assessment, document verification, and external media intelligence**.
+- **Frontend/UI**: Streamlit (kept) or migrate to a web app (React/Next.js).
+- **Backend API**: FastAPI (or Django) serving JSON APIs.
+- **Workers**: background jobs for OCR/media processing/report generation.
 
-This naturally decomposes into **modular research questions**, each corresponding to **your flowchart phases**.
+Recommended scaling patterns:
 
----
+- **Horizontal scaling**: run multiple API replicas behind a load balancer (preferred).
+- **Vertical scaling**: only as a quick stopgap for CPU/RAM bound workloads.
+- **Async + job queue**: OCR and other long-running tasks should run in workers, not in the request path.
 
-## 2️⃣ Research Question Hierarchy (Mapped to Your System)
+Operationally:
+- Put a **load balancer** in front of the API.
+- Use **autoscaling** based on CPU/RPS/queue depth.
+- Ensure all instances are stateless; store sessions in Redis and files in object storage.
 
-### 🧠 RQ0 — Foundational (System-Level)
+### 4) Frontend Scaling
 
-**RQ0:**
+Current UI is Streamlit (server-rendered Python). Options:
 
-> *How can ESG assessment for SMEs be operationalized into a scalable, explainable, and verifiable AI system without requiring full ESG disclosures?*
+- **Keep Streamlit**:
+  - Put Streamlit behind a reverse proxy.
+  - Scale with multiple replicas + sticky sessions (or move auth state out of `st.session_state`).
+  - Offload heavy compute to worker services.
 
-This justifies:
+- **Move to a JS frontend** (for large scale / better UX):
+  - Use **CDN** for static assets.
+  - Implement **lazy loading** for heavy pages (reports/graphs).
+  - Consider **SSR/SSG** with Next.js for marketing/docs pages; keep the authenticated app as SPA/SSR as needed.
 
-* SMEs
-* Progressive tiers (Basic → Pro)
-* Hybrid AI (rules + NLP)
+Even with Streamlit, you can still use a CDN for:
+- static exports (reports, images)
+- public documentation site
 
----
+### 5) Infrastructure (recommended cloud setup)
 
-## 3️⃣ Phase-wise Research Question Workflow
+Two realistic setups:
 
----
+#### Option A (fastest MVP-to-prod): Managed containers + managed DB
 
-## 🔹 Phase 1 — ESG Framework & Question Design (2.x)
+AWS example (similar services exist on GCP/Azure):
+- Compute:
+  - **ECS Fargate** (or EKS later) for API + workers + Streamlit
+  - **Application Load Balancer** in front
+- Data:
+  - **RDS Postgres** for relational data
+  - **ElastiCache Redis** for cache/sessions/queues
+  - **S3** for uploads and generated reports
+- Async processing:
+  - **SQS** (queue) + worker tasks
+- Observability:
+  - **CloudWatch** logs/metrics, or OpenTelemetry → Datadog/Grafana
 
-### **RQ1 — ESG Question Design**
+#### Option B (serverless leaning): API + queues + object storage
 
-> **RQ1:** *What ESG questions and indicators best balance coverage, simplicity, and verifiability for SME self-assessment?*
+- API: **AWS Lambda** (works best if requests are short and dependencies are manageable)
+- Queue/workers: **SQS + Fargate workers** (keep OCR off Lambda if it’s heavy)
+- DB: **RDS Postgres**
+- Files: **S3**
 
-**Method**
+### 6) Cost Estimate (very rough)
 
-* Literature review (GRI, SASB, SME ESG studies)
-* Indicator reduction
-* Expert-informed question clustering
+These are order-of-magnitude ranges for a typical SaaS-style workload. Real cost depends on:
+requests per user, file upload sizes, OCR/media processing volume, retention, and concurrency.
 
-**Artifact**
+- **~1k users** (low concurrency, light OCR):
+  - ~$50–$250/month
+  - Single small DB, 1–2 small containers, minimal Redis, small object storage.
 
-* 30-question ESG schema
-* E/S/G-balanced indicator set
+- **~10k users** (moderate concurrency, some background jobs):
+  - ~$300–$2,000/month
+  - Multi-replica API/Streamlit, Redis, larger Postgres, queue + workers, more storage/egress.
 
-**Evaluation**
+- **~100k users** (high concurrency, frequent jobs/analytics):
+  - ~$3,000–$30,000+/month
+  - Autoscaling fleets, read replicas, heavier caching, dedicated workers, stronger observability, possibly a data warehouse.
 
-* Coverage vs redundancy analysis
-* Expert validation
-* Mapping completeness to ESG standards
+If you share expected “active users/day”, average session length, and OCR volume, you can tighten this to a more meaningful estimate.
 
----
+### 7) Roadmap (MVP → production-grade)
 
-### **RQ2 — Self-Declared ESG Reliability**
-
-> **RQ2:** *How reliable are self-declared ESG responses when no documentary evidence is available?*
-
-**Method**
-
-* Self-assessment scoring
-* Conservative weighting
-* Missing-data penalties
-
-**Artifact**
-
-* **Basic ESG Score**
-* Confidence labels (Low)
-
-**Evaluation**
-
-* Sensitivity analysis
-* False-positive risk estimation
-* Score stability under uncertainty
-
----
-
-## 🔹 Phase 2 — Evidence & NLP Integration (3.x)
-
-![Image](https://obata.com/wp-content/uploads/2023/11/O_7_Steps_ESG-Process-1024x1024.png)
-
-![Image](https://www.mdpi.com/sustainability/sustainability-15-12731/article_deploy/html/images/sustainability-15-12731-g001.png)
-
-![Image](https://miro.medium.com/v2/resize%3Afit%3A1200/1%2A6Z0RV1aLsXVsYDlVRLJ1iA.png)
-
----
-
-### **RQ3 — Evidence-Based Score Improvement**
-
-> **RQ3:** *To what extent does document-based verification improve ESG score accuracy and confidence compared to self-declared assessments?*
-
-**Method**
-
-* OCR + document parsing
-* Question–evidence matching
-* Confidence scoring
-
-**Artifact**
-
-* Evidence-backed ESG indicators
-* Per-question confidence scores
-
-**Evaluation**
-
-* Score delta (Basic vs Pro)
-* Evidence coverage ratio
-* Confidence gain metrics
+1. **Stabilize data model**
+   - Define canonical schemas for users/companies/assessments/documents/audit logs.
+2. **Move off JSON**
+   - Migrate to Postgres; add migrations (Alembic/Django migrations).
+3. **Externalize storage**
+   - Move uploads from local disk to S3 (or GCS/Azure Blob) and store only URLs/metadata in DB.
+4. **Split compute from UI**
+   - Introduce FastAPI for data operations; keep Streamlit as a thin client calling the API.
+5. **Add background processing**
+   - Queue + workers for OCR/media/report generation; add retries and idempotency keys.
+6. **Add auth & tenancy**
+   - Replace dev-mode auth with proper password hashing + sessions/JWT + RBAC checks at the API layer.
+7. **Observability + reliability**
+   - Centralized logs, metrics, tracing; alerts on error rates/latency/queue depth.
+8. **Scale reads**
+   - Caching for dashboards/reports; add read replicas if needed.
+9. **Hardening**
+   - Rate limiting, input validation, security reviews, backups, DR plan.
+10. **Performance tuning**
+   - Indexing, query optimization, batch processing, pagination, and load testing.
 
 ---
 
-### **RQ4 — Media & External Signal Validation**
-
-> **RQ4:** *Can external media signals detect inconsistencies or risks not captured by self-reported ESG data?*
-
-**Method**
-
-* News & social media crawling
-* ESG ABSA + sentiment classification
-* Contradiction detection
-
-**Artifact**
-
-* Media-derived risk flags
-* External sentiment indicators
-
-**Evaluation**
-
-* Contradiction detection accuracy
-* Risk recall vs false alarms
-* Temporal alignment analysis
-
----
-
-### **RQ5 — Explainability in ESG NLP**
-
-> **RQ5:** *How can explainable NLP techniques increase transparency and trust in ESG scoring for non-technical SME stakeholders?*
-
-**Method**
-
-* Aspect-level explanations
-* Evidence traceability
-* Rule-based justifications
-
-**Artifact**
-
-* Per-question explanations
-* Highlighted text spans
-* Decision rationales
-
-**Evaluation**
-
-* Explainability usefulness survey
-* Human interpretability scoring
-* Error analysis with explanations
-
----
-
-## 🔹 Phase 3 — Hybrid / Neuro-Symbolic Scoring (3.3.1)
-
-### **RQ6 — Neuro-Symbolic ESG Reasoning**
-
-> **RQ6:** *Does integrating symbolic rules with neural ESG classification improve robustness and auditability of ESG scores?*
-
-**Method**
-
-* Rule constraints (e.g., contradiction penalties)
-* Neural ESG classifiers
-* Logical consistency checks
-
-**Artifact**
-
-* Hybrid ESG score
-* Rule-trigger logs
-
-**Evaluation**
-
-* Logical consistency rate
-* Reduction of incoherent scores
-* Audit trace completeness
-
----
-
-## 🔹 Phase 4 — User-Centric Explainability & UX (4.x)
-
-### **RQ7 — Decision Support & Recommendations**
-
-> **RQ7:** *Can explainable ESG feedback and actionable suggestions improve SME engagement and ESG readiness?*
-
-**Method**
-
-* Score-based suggestion generation
-* What-if analysis
-* UX explanation panels
-
-**Artifact**
-
-* Improvement suggestions
-* ESG roadmap
-
-**Evaluation**
-
-* User comprehension scores
-* Perceived usefulness
-* Engagement metrics
-
----
-
-## 🔹 Phase 5 — Business & Financial Relevance (5.x)
-
-### **RQ8 — ESG-to-Risk Translation**
-
-> **RQ8:** *How effectively can ESG signals be translated into credit and risk indicators for SMEs?*
-
-**Method**
-
-* ESG → risk feature mapping
-* Penalization for governance/media risks
-
-**Artifact**
-
-* ESG-adjusted risk score
-* Credit-relevant features
-
-**Evaluation**
-
-* Correlation with known risk proxies
-* Feature importance analysis
-
----
-
-## 4️⃣ Research Question → System Mapping (Summary Table)
-
-| Research Question | System Component      |
-| ----------------- | --------------------- |
-| RQ1               | ESG question design   |
-| RQ2               | Basic ESG score       |
-| RQ3               | Document verification |
-| RQ4               | Media intelligence    |
-| RQ5               | Explainability layer  |
-| RQ6               | Neuro-symbolic logic  |
-| RQ7               | Recommendation engine |
-| RQ8               | ESG → credit mapping  |
-
----
-
-## 5️⃣ Thesis-Ready Contribution Statement
-
-You can safely claim **multiple contributions**:
-
-1. A **progressive ESG scoring framework** for SMEs
-2. A **question-centric, evidence-aware ESG pipeline**
-3. An **explainable ESG NLP architecture**
-4. A **neuro-symbolic ESG reasoning layer**
-5. A **production-ready research system**, not a toy model
-
----
-
-## 6️⃣ What I Can Do Next (Highly Recommended)
-
-I can now:
-
-* Convert this into **thesis Chapter 3 (Methodology)**
-* Create a **Research Workflow Mermaid diagram**
-* Define **formal hypotheses (H1–H6)**
-* Design **evaluation datasets & metrics tables**
-* Write **academic-style RQ justifications**
-
-If this is for a thesis, the **next best step** is:
-👉 **Turn RQs into hypotheses + evaluation plan**
-
-Just say the word.
-
-Great question — at this point your system is **no longer just an app**, it’s a **research-grade socio-technical framework**. Below is a **proper academic research framing** that aligns with what you’ve already built (multi-role ESG certification, evidence-based validation, OCR/media checking, explainability, graph modeling).
-
-I’ll structure this like a **methods section + proposal**, so it’s directly usable for:
-
-* a thesis
-* a conference/workshop paper
-* a grant / PhD proposal
-* or a research-based product justification
-
----
-
-## 1️⃣ Research Problem Statement
-
-> **Problem:**
-> Existing ESG certification and rating systems are often:
-
-* opaque (black-box scores),
-* biased toward large firms,
-* weakly grounded in verifiable evidence,
-* and poorly adapted for SMEs and dynamic regulatory environments.
-
-Most systems rely on **self-reported questionnaires** or **manual audits**, which are:
-
-* costly,
-* slow,
-* inconsistent,
-* and vulnerable to greenwashing.
-
-👉 **Research gap:**
-There is no unified, **evidence-grounded, explainable, graph-based ESG certification framework** that integrates:
-
-* structured self-assessment,
-* document-level verification,
-* external media scrutiny,
-* role-based governance,
-* and transparent scoring logic.
-
-Your system directly targets this gap.
-
----
-
-## 2️⃣ High-level Research Aim
-
-> **To design, implement, and evaluate an explainable, evidence-driven ESG certification framework that integrates self-assessment, document verification, media intelligence, and graph-based reasoning for trustworthy sustainability evaluation.**
-
----
-
-## 3️⃣ Core Research Questions (RQs)
-
-### **RQ1 — Framework Design**
-
-**How can ESG certification be modeled as a multi-layer, evidence-grounded system rather than a static questionnaire-based score?**
-
-* Focus: system architecture, levels (L1 vs L2), governance
-* Output: conceptual + technical framework
-
----
-
-### **RQ2 — Evidence & Verification**
-
-**To what extent does document-level and media-based verification improve the reliability of ESG self-assessments?**
-
-* Compare:
-
-  * self-reported answers only (Level 1)
-  * vs evidence-supported answers (Level 2)
-
----
-
-### **RQ3 — Explainability**
-
-**How can explainability be operationalized in ESG certification to support trust, auditability, and regulatory compliance?**
-
-* Explain:
-
-  * why a score was assigned
-  * which evidence influenced it
-  * what risks or gaps remain
-
----
-
-### **RQ4 — Graph-based Modeling**
-
-**How can graph-based representations enhance ESG reasoning, traceability, and cross-entity analysis?**
-
-* Nodes: companies, questions, documents, media items, risks
-* Edges: supports, contradicts, relates_to, verified_by
-
----
-
-### **RQ5 — Industry Sensitivity**
-
-**How does industry-aware clustering affect ESG performance interpretation and benchmarking?**
-
-* Avoids “one-size-fits-all” ESG scoring
-* Enables sector-adjusted comparisons
-
----
-
-### **RQ6 — Governance & Roles**
-
-**How do role-based interactions (company, auditor, aggregator, admin) influence data quality and certification outcomes?**
-
-* Multi-actor accountability
-* Separation of powers
-
----
-
-## 4️⃣ Research Objectives (Concrete & Measurable)
-
-### **O1 — System Design**
-
-Design a **two-level ESG certification framework**:
-
-* Level 1: structured self-assessment
-* Level 2: evidence-validated assessment
-
----
-
-### **O2 — Evidence Integration**
-
-Develop pipelines for:
-
-* document ingestion,
-* OCR-based information extraction,
-* media/news screening,
-* evidence-to-claim linking.
-
----
-
-### **O3 — Explainability Layer**
-
-Implement explainability mechanisms that:
-
-* trace scores back to evidence,
-* surface uncertainty and risk,
-* provide actionable improvement suggestions.
-
----
-
-### **O4 — Graph Representation**
-
-Model ESG certification as a **knowledge graph** enabling:
-
-* traceability,
-* reasoning,
-* cross-company comparison.
-
----
-
-### **O5 — Empirical Evaluation**
-
-Empirically evaluate:
-
-* score stability,
-* disagreement reduction,
-* detection of inconsistencies or greenwashing signals.
-
----
-
-## 5️⃣ Hypotheses (Testable)
-
-### **H1 — Evidence Improves Reliability**
-
-> ESG scores supported by document and media evidence show **lower variance** and **higher inter-rater agreement** than self-reported scores alone.
-
-**Metric ideas:**
-
-* score variance
-* Cohen’s Kappa between auditors
-* revision rate after audit
-
----
-
-### **H2 — Explainability Increases Trust**
-
-> Explainable ESG reports increase perceived trustworthiness and usability among stakeholders.
-
-**Metric ideas:**
-
-* user trust survey
-* task completion time
-* qualitative feedback coding
-
----
-
-### **H3 — Graph-based Modeling Improves Detection**
-
-> Graph-based ESG representations improve the detection of inconsistencies and risk signals compared to flat tabular models.
-
-**Metric ideas:**
-
-* contradiction detection rate
-* manual audit findings overlap
-* false positive / false negative rates
-
----
-
-### **H4 — Industry-aware Clustering Matters**
-
-> Industry-adjusted ESG benchmarking leads to significantly different performance interpretations compared to global scoring.
-
-**Metric ideas:**
-
-* rank changes across clusters
-* score normalization error
-* within-industry variance
-
----
-
-### **H5 — Media Signals Add Predictive Value**
-
-> External media and social signals provide early indicators of ESG risks not captured in self-assessments.
-
-**Metric ideas:**
-
-* lead time between media signal and assessment downgrade
-* correlation with later regulatory or reputational events
-
----
-
-## 6️⃣ Methodology
-
-### **6.1 System Development (Design Science Research)**
-
-You are effectively doing **Design Science Research (DSR)**:
-
-1. Problem identification (ESG opacity, greenwashing)
-2. Artifact design (your platform)
-3. Implementation (Streamlit + JSON → graph)
-4. Evaluation (quantitative + qualitative)
-
-This aligns well with IS / HCI / AI governance research.
-
----
-
-### **6.2 Data Sources**
-
-* **Internal**
-
-  * Self-assessment answers
-  * Uploaded documents
-  * OCR-extracted text
-  * Certification lifecycle logs
-
-* **External**
-
-  * News articles (1–2 year window)
-  * Social media posts
-  * Industry benchmarks
-
----
-
-### **6.3 Processing Pipeline**
-
-1. Questionnaire → structured claims
-2. Documents → OCR → extracted evidence
-3. Media → sentiment / ESG tagging
-4. Evidence linking → claim validation
-5. Graph construction
-6. Scoring + explainability generation
-
----
-
-### **6.4 Graph Modeling**
-
-**Nodes**
-
-* Company
-* Question
-* Answer
-* Document
-* Media Item
-* Risk
-* Industry
-
-**Edges**
-
-* answers
-* supported_by
-* contradicted_by
-* mentions
-* belongs_to_industry
-* verified_by
-
-This enables:
-
-* traversal-based explanations
-* impact analysis
-* dependency tracing
-
----
-
-## 7️⃣ Evaluation Metrics
-
-### **Technical Metrics**
-
-* OCR accuracy
-* evidence coverage ratio
-* contradiction detection rate
-* processing latency
-
----
-
-### **Scoring Metrics**
-
-* score stability over time
-* revision frequency
-* cross-auditor agreement
-
----
-
-### **Explainability Metrics**
-
-* trace depth (steps from score → evidence)
-* explanation completeness
-* user comprehension scores
-
----
-
-### **Governance Metrics**
-
-* role interaction frequency
-* audit intervention rate
-* certification lifecycle duration
-
----
-
-## 8️⃣ Expected Contributions
-
-### **Theoretical**
-
-* A formalized model of **evidence-based ESG certification**
-* Integration of explainable AI and sustainability governance
-
----
-
-### **Methodological**
-
-* Graph-based ESG evaluation methodology
-* Multi-source verification pipeline
-
----
-
-### **Practical**
-
-* SME-accessible ESG certification
-* Transparent alternative to black-box ratings
-* Tool for regulators, investors, aggregators
-
----
-
-## 9️⃣ Positioning (Very Important)
-
-You can position this as:
-
-* **AI for Sustainability**
-* **Explainable AI (XAI)**
-* **Computational Social Responsibility**
-* **Digital Governance Systems**
-* **Greenwashing Detection**
-* **Knowledge Graphs for ESG**
-
-This fits venues like:
-
-* ACM FAccT
-* AAAI/ICWSM workshops
-* Sustainability / CSR journals
-* Information Systems conferences
-* AI governance tracks
-
----
-
-## 10️⃣ Next (if you want)
-
-I can next:
-
-* map these RQs directly to **your existing code modules**
-* help you write a **methods section** (LaTeX-ready)
-* design an **experimental setup**
-* formalize the **graph schema**
-* convert this into a **PhD proposal outline**
-
-Just tell me which direction you want to go.
+## Similar Products / Market Landscape
+
+Below are 10 products/companies in the broader “ESG assessment / sustainability reporting / supplier due diligence / evidence + scoring” space. Details like tech stack and scale are based on public information; many vendors don’t disclose their implementation details, so “tech stack” is marked as “not public” where appropriate.
+
+### 1) EcoVadis
+
+- What they do: Sustainability ratings/scorecards for companies (often used in supply chains for vendor screening and improvement programs).
+- Tech stack (public): Not publicly disclosed (SaaS platform).
+- Business model: Subscription / per-rating / enterprise programs (B2B).
+- Scale (public): Reports having **130,000+ rated companies** in its database (as of end of 2023). Source: `https://support.ecovadis.com/hc/en-us/articles/210459707-Who-are-EcoVadis-customers`
+- What makes them successful:
+  - Strong network effects (buyers request EcoVadis ratings from suppliers).
+  - Standardized methodology and benchmarking across industries.
+  - Clear “scorecard” output that procurement teams can operationalize.
+
+### 2) Sedex (and SMETA ecosystem)
+
+- What they do: Supplier ethical/sustainability data exchange + assessment/audit workflow (SMETA audits) for supply chain due diligence.
+- Tech stack (public): Not publicly disclosed (SaaS platform).
+- Business model: Membership/subscription (B2B).
+- Scale (public): Not consistently published in one canonical place; public materials describe broad global adoption. Start here: `https://www.sedex.com/`
+- What makes them successful:
+  - Deep procurement + audit ecosystem adoption (buyers, suppliers, auditors).
+  - A common audit/reporting language (SMETA) that reduces duplication.
+
+### 3) Workiva (Sustainability / ESG reporting)
+
+- What they do: Connected reporting and disclosure platform spanning financial reporting, GRC, and sustainability reporting workflows.
+- Tech stack (public): Not fully disclosed; cloud SaaS platform.
+- Business model: Subscription SaaS (mid-market to enterprise).
+- Scale (public): Reports **6,624 customers** (as of December 31, 2025). Source: `https://investor.workiva.com/node/12036/html`
+- What makes them successful:
+  - Excellent “data → disclosure” workflow and controls.
+  - Enterprise-grade governance/auditability and integrations.
+  - Strong retention and expansion in large accounts.
+
+### 4) Salesforce Net Zero Cloud
+
+- What they do: Carbon/ESG data management and reporting, designed to sit alongside CRM/supply-chain data.
+- Tech stack (public): **Built on the Salesforce platform**.
+- Business model: Subscription (Salesforce product editions/add-ons).
+- Scale (public): Not publicly disclosed as a user count; benefits from Salesforce’s enterprise install base.
+- What makes them successful:
+  - Distribution: ships into organizations already standardized on Salesforce.
+  - Integrates sustainability data with operational/business data.
+
+### 5) IBM Envizi
+
+- What they do: Emissions accounting and sustainability performance management (Scope 1/2/3, auditability, reporting).
+- Tech stack (public): Not fully disclosed; enterprise SaaS (IBM product).
+- Business model: Subscription / enterprise contracts.
+- Scale (public): Not publicly disclosed; positioned as enterprise-grade and used by large organizations.
+- What makes them successful:
+  - Enterprise credibility + integration story (IBM ecosystem).
+  - Focus on audit trail and reporting readiness.
+
+### 6) Persefoni
+
+- What they do: “Carbon accounting and climate management” platform emphasizing calculation methodology, audit trail, and reporting.
+- Tech stack (public): Not fully disclosed; SaaS platform; public partnerships indicate embedded analytics components.
+- Business model: Subscription SaaS (enterprise + mid-market tiers).
+- Scale (public): Not consistently disclosed; positioned as enterprise-grade and methodologically rigorous.
+- What makes them successful:
+  - Methodology credibility and auditability focus.
+  - Strong product narrative around assurance-grade disclosures.
+
+### 7) Watershed
+
+- What they do: Enterprise sustainability platform (carbon accounting + decarbonization planning + reporting).
+- Tech stack (public): Not publicly disclosed (SaaS platform).
+- Business model: Subscription + services (enterprise).
+- Scale (public): Not publicly disclosed; widely positioned as an enterprise platform.
+- What makes them successful:
+  - Strong “platform + expertise” story (tools plus climate advisory partners).
+  - Focus on executive-ready reporting and planning.
+
+### 8) Sphera (EHS / sustainability / risk)
+
+- What they do: Enterprise EHS and sustainability management platform (operational risk + sustainability data management).
+- Tech stack (public): Not publicly disclosed (SaaS platform).
+- Business model: Enterprise subscription + services.
+- Scale (public): Markets **8,400+ customers** across industries (some materials also cite 8,500+). Source: `https://sphera.com/press-releases-from-sphera/`
+- What makes them successful:
+  - Broad coverage across EHS + sustainability, embedded in operations.
+  - Large legacy customer base and long-term procurement relationships.
+
+### 9) RepRisk
+
+- What they do: ESG risk intelligence and due diligence data (media-based signals, controversies, risk screening).
+- Tech stack (public): Not publicly disclosed; data/analytics product delivered via platforms and integrations.
+- Business model: Subscription (financial services + enterprise risk/procurement).
+- Scale (public): Public statements cite **350+ clients globally** (historical milestone; current may be higher). Source: `https://www.businesswire.com/news/home/20200720005510/en/RepRisk-Reaches-New-Milestone-of-Evaluating-More-Than-150000-Companies-on-ESG-Risks`
+- What makes them successful:
+  - High-signal risk monitoring that complements self-reported data.
+  - Integrates into financial/procurement workflows as a “screening layer”.
+
+### 10) MSCI ESG Ratings / Sustainalytics ESG Risk Ratings (investor-grade ratings providers)
+
+- What they do: Investor-facing ESG ratings/research and datasets used for portfolio analysis, screening, and benchmarking.
+- Tech stack (public): Not publicly disclosed (data + research products).
+- Business model: Data subscription / enterprise licensing.
+- Scale (public): Large company coverage universes (examples: MSCI’s ESG Ratings brochure cites 8,500 company ratings; Sustainalytics markets 16,000+ companies covered for ESG Risk Ratings). Sources: `https://www.msci.com/documents/1296102/15233886/MSCI-ESG-Ratings-Brochure-cbr-en.pdf` and `https://www.sustainalytics.com/corporate-solutions/esg-risk-ratings`
+- What makes them successful:
+  - Embedded into investment and index construction workflows.
+  - Longstanding brand trust, methodology governance, and dataset breadth.
+
+### What could differentiate `esg-birru` (niche opportunities)
+
+Most “successful” platforms win via network effects (procurement ecosystems), auditability, and tight integration into existing enterprise systems. For this project, realistic differentiation paths include:
+
+- **SME-first evidence workflow**: Make evidence upload, OCR extraction, and “what counts as evidence” extremely simple for SMEs (who often lack ESG staff).
+- **Assurance-grade audit trail**: Treat every score as a traceable claim with linked evidence, reviewer actions, and reproducible calculations.
+- **Human-in-the-loop scoring**: Provide tools that let auditors/certifiers efficiently review, override, and explain model outputs with clear provenance.
+- **Vertical specialization**: Pick one industry segment (e.g., manufacturing SMEs) and ship templates/questions/evidence rules that are “opinionated and correct” for that niche.
+- **Buyer/supplier collaboration**: Even without becoming “the network”, support invitation flows where a buyer requests a supplier assessment and tracks completion.
+- **Compliance alignment as product UX**: Help users map outputs to CSRD/ISSB/GRI-style disclosure requirements with minimal manual work.

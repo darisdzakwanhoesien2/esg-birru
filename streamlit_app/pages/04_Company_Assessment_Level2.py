@@ -4,8 +4,11 @@ from pathlib import Path
 from datetime import datetime
 from streamlit_app.utils.auth_utils import is_logged_in, get_current_user
 from streamlit_app.utils.data_access import load_json, write_json
+from streamlit_app.utils.paths import get_db_root, get_project_root
 
-DB_ROOT = Path(os.getcwd()) / "backend" / "db" / "json_db"
+# Use a stable project-root based path instead of `os.getcwd()`, which can vary
+# depending on how Streamlit is launched (local vs. cloud vs. IDE).
+DB_ROOT = get_db_root()
 DOCS_PATH = DB_ROOT / "documents.json"
 L2_PATH = DB_ROOT / "assessments_level2.json"
 OCR_PATH = DB_ROOT / "ocr_results.json"
@@ -30,14 +33,20 @@ def run(st=st):
                 if not uploaded:
                     st.error("Choose file first")
                 else:
-                    company_dir = Path(os.getcwd()).parent / "storage" / "uploads" / user["company_id"]
+                    # Store uploads under project-local `storage/uploads/<company_id>/`
+                    company_dir = get_project_root() / "storage" / "uploads" / user["company_id"]
                     company_dir.mkdir(parents=True, exist_ok=True)
                     fname = f"{int(datetime.utcnow().timestamp())}_{uploaded.name}"
                     dest = company_dir / fname
                     with open(dest, "wb") as f:
                         f.write(uploaded.getbuffer())
-                    docs = load_json(DOCS_PATH).get("documents", [])
-                    doc_id = f"doc_{user['company_id']}_{int(datetime.utcnow().timestamp())}"
+                    docs_db = load_json(DOCS_PATH)
+                    docs = docs_db.get("documents", [])
+                    ts = int(datetime.utcnow().timestamp())
+                    doc_id = f"doc_{user['company_id']}_{ts}"
+                    # Persist both the user-visible filename and the internal stored path.
+                    # Keeping them separate makes it easier to change storage backends later
+                    # without breaking audit trails and UI display.
                     obj = {
                         "doc_id": doc_id,
                         "company_id": user["company_id"],
@@ -49,7 +58,8 @@ def run(st=st):
                         "uploaded_at": datetime.utcnow().isoformat()+"Z"
                     }
                     docs.append(obj)
-                    write_json(DOCS_PATH, {"documents": docs})
+                    docs_db["documents"] = docs
+                    write_json(DOCS_PATH, docs_db)
                     st.success("Evidence uploaded")
                     st.json(obj)
 

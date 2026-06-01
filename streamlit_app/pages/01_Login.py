@@ -23,17 +23,6 @@ def run(st=st):
         else:
             st.error("Invalid credentials")
 
-            # 🔎 SHOW DEBUG INFO
-            st.subheader("Debug info")
-            st.json({
-                "input_email": email,
-                "input_password": password,
-                "expected_password": st.session_state.get("_DEBUG_EXPECTED"),
-                "password_match": st.session_state.get("_DEBUG_PASSWORD_OK"),
-                "users_loaded": st.session_state.get("_DEBUG_USERS"),
-                "reason": st.session_state.get("_DEBUG_REASON"),
-            })
-
 
 # # streamlit_app/pages/01_Login.py
 
